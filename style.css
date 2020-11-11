@@ -81,3 +81,62 @@ h1, h2, h3 {
 		box-shadow:4px 4px 10px rgba(0,0,0,0.8);
 	}
 }
+
+line{
+	stroke:black;
+	stroke-width:2px;
+  	fill: none;
+}
+
+  .dataLine{
+	stroke: #0000BB;
+	stroke-width: 1px;
+	fill: none;
+  }
+  
+  .dataLine1{
+	stroke: orange;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine2{
+	stroke: red;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine3{
+	stroke: green;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine4{
+	stroke: palevioletred;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine5{
+	stroke: purple;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine6{
+	stroke: black;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine7{
+	stroke: lightseagreen;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .xlabel, .ylabel {
+	font: 8px sans-serif;
+  }
+

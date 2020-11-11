@@ -6,7 +6,7 @@
   <meta charset='utf-8'>
 
   <!-- Title -->
-  <title>Project Team ##: Topic, DS 4200 F20</title>
+  <title>Project Team 14: Date SMART, DS 4200 F20</title>
   
   <!-- CSS Styling -->
   <link rel='stylesheet' href='style.css'>
@@ -26,13 +26,13 @@
 <body>
 
   <!-- Update this with your GitHub repo URL -->
-  <span id='forkongithub'><a href='https://github.com/NEU-DS-4200-F20-Staff/Project'>Fork me on GitHub</a></span>
+  <span id='forkongithub'><a href='https://github.com/NEU-DS-4200-F20/project-group-14-date-smart'>Fork me on GitHub</a></span>
 
   <!-- Writeup -->
   <div class='content-column'>
-   <h1>Project Team ##: Topic, DS4200 F20</h1>
+   <h1>Project Team 14: Date SMART, DS4200 F20</h1>
     
-    <p><strong>Student One</strong>, <strong>Student Two</strong>, <strong>Student Three</strong></p>
+    <p><strong>Sophie Bailard</strong>, <strong>Maura Keith</strong>, <strong>Abigail Zahne</strong></p>
     
     <p>Service-Learning Course Project as part of
 	<a href='https://canvas.instructure.com/courses/1781732'>DS 4200 F20: Information Visualization</a>, 
@@ -43,7 +43,10 @@
     
     <h1>Abstract</h1>
     
-    <p>Replace with your paper abstract.</p>
+    <p>This project presents the effectiveness of Date SMART, an intervention that attempts to reduce dating violence, on adolescent girls. 
+      Because adolescent girls are a high-risk demographic for experiencing dating violence, it is important to determine how effective this 
+      skills-based intervention is. We will be analyzing data from Phase II of the study, and comparing and contrasting the patterns between 
+      the two groups of data—girls in the Data SMART intervention and girls in the control groups.</p>
 
     
     <h1>Visualization</h1>
@@ -57,17 +60,21 @@
   <div class='vis-holder'>
     <!-- Change viewbox to whatever you want, e.g., '0 0 1000 6000' This determines your aspect ratio and coordinate system -->    
     <!-- Delete all the sample SVG code below after the viewbox to before the closing tag. Populate this part of the SVG with D3. -->
+    <h2>Control Group 'Yes' Responses</h2>
     <svg id='vis-svg-1'
       preserveAspectRatio='xMidYMid meet' class='vis-svg' viewBox='0 0 1000 1000' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-      
-      
-      <text x='30%' y='35%' text-anchor='middle'>A</text>
-      <text x='70%' y='35%' text-anchor='middle'>B</text>
-      <rect x='20%' y='40%' width='20%' height='20%' fill='yellow'></rect>
-      <circle cx='70%' cy='50%' r='10%' fill='blue'></circle>
+
+
       
       
     <!-- Don't delete the closing tag! -->
+    </svg>
+
+    <h2>DateSMART Group 'Yes' Responses</h2>
+    <svg id='vis-svg-2'
+      preserveAspectRatio='xMidYMid meet' class='vis-svg' viewBox='0 0 1000 1000' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+
     </svg>
   </div>
   
@@ -107,7 +114,11 @@
   </div>
   
   <!-- Scripts at the end avoid need for dealing with async, defer, or onload event handlers -->
+  
+  <!-- Load the d3.js library (version 6 minified) -->
   <script src='lib/d3.v6.1.1/d3.min.js'></script>
+
+  <!-- Load the visualization.js file -->
   <script src='js/visualization.js'></script>
 </body>
 </html>
