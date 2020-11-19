@@ -30,18 +30,18 @@ d3.csv('data/DateSMART_Data (1).csv', function(d) {
     dv_role: d.DV_Role,
     breakup: d.Breakup,
     notes: d.Notes,
-    timepoint_code: +d.TimePoint_Code
+    timepoint_code: +d.TimePoint_Code,
+    days_from_baseline: +d.Days_from_Baseline
   };
 }).then(lineChart);
 
 function lineChart(data){
   var dateSMART = data.filter(function(d){ return d.condition === 'DateSMART'})
   var control = data.filter(function(d) { return d.condition === 'Control'})
-  var totalParticipants = data.filter(function(d) { return d.participant_id === 'PARTICIPANT_ID'})
-  var p = data.filter(function(d) { return d.participant_id})
-  var p2 = new Set(p)
-  //var p = d3.map(data, function(d){return(d.participant_id)}).keys()
-  //console.log(p);
+  
+  var totalParticipants = data.filter(function(d) { return d.days_from_baseline === 0})
+  console.log(totalParticipants);
+  
 
   ///////////////////////// CONTROL //////////////////////////////
   var yesVASexControl = control.filter(function(d){ return d.va_sex === 'Yes'})
@@ -407,7 +407,37 @@ let svg2 = d3.select('#vis-svg-2')
   .attr('class', 'dataLine7');
 
 
+  function gridData() {
+    var data = new Array();
+    var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
+    var ypos = 1;
+    var width = 50;
+    var height = 50;
 
+    // iterate for rows 
+    for (var row = 0; row < 10; row++) {
+        data.push( new Array() );
+
+        // iterate for cells/columns inside rows
+        for (var column = 0; column < 10; column++) {
+            data[row].push({
+                x: xpos,
+                y: ypos,
+                width: width,
+                height: height
+            })
+            // increment the x position. I.e. move it over by 50 (width variable)
+            xpos += width;
+        }
+        // reset the x position after a row is complete
+        xpos = 1;
+        // increment the y position for the next row. Move it down 50 (height variable)
+        ypos += height; 
+    }
+    return data;
+}
+
+var gridData = gridData();
 
 // VISUALIZATION # 3
 let svg3 = d3.select('#vis-svg-3')
@@ -421,17 +451,43 @@ let svg3 = d3.select('#vis-svg-3')
     .append('g')
     .attr('transform','translate(' + margin.left +',' + margin.top + ')');
 
+  
+    var row = svg3.selectAll(".row")
+    .data(gridData)
+    .enter().append("g")
+    .attr("class", "row");
+  
+    var column = row.selectAll(".square")
+    .data(function(d) { return d; })
+    .enter().append("rect")
+    .attr("class","square")
+    .attr("x", function(d) { return d.x; })
+    .attr("y", function(d) { return d.y; })
+    .attr("width", function(d) { return d.width; })
+    .attr("height", function(d) { return d.height; })
+    .style("fill", "#fff")
+    .style("stroke", "#222");
+
+/* 
     //create the scale for the xAxis
   var xScale3 = d3.scaleBand() // ordinal??
   .domain(['0', '1', '2', '3', '4'])
   .range([0, width]);
 
+  
+  var par = new Array()
+  for(var i = 0; i < totalParticipants.length; i++){
+    par.push(totalParticipants[i].participant_id)
+  }
+  console.log(par)
+
   //create the scale for the yAxis
-  var yScale3 = d3.scaleLinear()
+  var yScale3 = d3.scaleBand()
   /* .domain([0, d3.max([yesVASexCountControl, yesCondomUsedCountControl, yesForcedSexCountControl, yesSelfAUCountControl, yesSelfDUCountControl, yesSelfAUCountControl,
   yesPartnerAUCountControl, yesPartnerDUCountControl, yesDVCountControl])]) */ //I think instead it should maybe use yes____, or maybe keep the axis the same?
-  .domain([0, 2500])
+  /*.domain(par)
   .range([height - margin.bottom - margin.top, 0]);
+    
 
   //create the xAxis
  var xAxis = d3.axisTop(xScale3)
