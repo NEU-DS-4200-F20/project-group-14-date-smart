@@ -37,6 +37,11 @@ d3.csv('data/DateSMART_Data (1).csv', function(d) {
 function lineChart(data){
   var dateSMART = data.filter(function(d){ return d.condition === 'DateSMART'})
   var control = data.filter(function(d) { return d.condition === 'Control'})
+  var totalParticipants = data.filter(function(d) { return d.participant_id === 'PARTICIPANT_ID'})
+  var p = data.filter(function(d) { return d.participant_id})
+  var p2 = new Set(p)
+  //var p = d3.map(data, function(d){return(d.participant_id)}).keys()
+  //console.log(p);
 
   ///////////////////////// CONTROL //////////////////////////////
   var yesVASexControl = control.filter(function(d){ return d.va_sex === 'Yes'})
@@ -400,4 +405,102 @@ let svg2 = d3.select('#vis-svg-2')
   chartGroup.append('path')
   .attr('d', line(DVDS))
   .attr('class', 'dataLine7');
+
+
+
+
+// VISUALIZATION # 3
+let svg3 = d3.select('#vis-svg-3')
+    .append('svg')
+    .attr('preserveAspectRatio', 'xMidYMid meet') // this will scale your visualization according to the size of the page.
+    .attr('width', '100%') // this is now required by Chrome to ensure the SVG shows up at all
+    .style('background-color', '#ccc') // change the background color to white
+    .attr('viewBox', [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom].join(' '))
+
+    var chartGroup = svg3
+    .append('g')
+    .attr('transform','translate(' + margin.left +',' + margin.top + ')');
+
+    //create the scale for the xAxis
+  var xScale3 = d3.scaleBand() // ordinal??
+  .domain(['0', '1', '2', '3', '4'])
+  .range([0, width]);
+
+  //create the scale for the yAxis
+  var yScale3 = d3.scaleLinear()
+  /* .domain([0, d3.max([yesVASexCountControl, yesCondomUsedCountControl, yesForcedSexCountControl, yesSelfAUCountControl, yesSelfDUCountControl, yesSelfAUCountControl,
+  yesPartnerAUCountControl, yesPartnerDUCountControl, yesDVCountControl])]) */ //I think instead it should maybe use yes____, or maybe keep the axis the same?
+  .domain([0, 2500])
+  .range([height - margin.bottom - margin.top, 0]);
+
+  //create the xAxis
+ var xAxis = d3.axisTop(xScale3)
+  .tickSize(height -80);
+  chartGroup.append('g')
+  .attr('class', 'x axis')
+  .attr('transform', 'translate(-42, ' + (height - margin.bottom - margin.top) + ')')
+  .call(xAxis);
+
+   // text label for the x axis
+   // https://stackoverflow.com/questions/11189284/d3-axis-labeling
+   svg3.append("text")
+   .attr("class", "xlabel")
+   .attr("text-anchor", "end")
+   .attr("x", width - 150)
+   .attr("y", height - 6)
+   .text("Days From Each Timepoint");
+
+   // title
+   // http://www.d3noob.org/2013/01/adding-title-to-your-d3js-graph.html
+   svg3.append("text")
+        .attr("x", width - 150)             
+        .attr("y", 30 )
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text("Date SMART Group 'Yes' Responses");
+
+  //create the yAxis
+  var yAxis = d3.axisLeft(yScale3)
+  .tickSize(-width + 40);
+  chartGroup.append('g')
+  .attr('class', 'y axis')
+  .attr('transform', 'translate(0, 0)')
+  .call(yAxis); 
+  
+  // text label for the y axis
+  // https://stackoverflow.com/questions/11189284/d3-axis-labeling
+  svg3.append("text")
+  .attr("class", "ylabel")
+  .attr("text-anchor", "end")
+  .attr("x", -200)
+  .attr("y", 6)
+  .attr("dy", ".20em")
+  .attr("transform", "rotate(-90)")
+  .text("Participants");  
+  
+/*
+
+  //http://www.d3noob.org/2013/01/adding-grid-lines-to-d3js-graph.html
+  svg3.append("g")         
+        .attr("class", "grid")
+        .attr("transform", "translate(0," + height + ")")
+        .call(make_x_axis()
+            .tickSize(-height, 0, 0)
+            .tickFormat("")
+        );
+    
+
+    svg3.append("g")         
+        .attr("class", "grid")
+        .call(make_y_axis()
+            .tickSize(-width, 0, 0)
+            .tickFormat("")
+        );*/
+
+
+
+
 }
+  
+  
