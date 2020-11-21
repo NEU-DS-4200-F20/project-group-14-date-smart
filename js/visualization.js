@@ -38,6 +38,7 @@ d3.csv('data/DateSMART_Data (1).csv', function(d) {
 function lineChart(data){
   var dateSMART = data.filter(function(d){ return d.condition === 'DateSMART'})
   var control = data.filter(function(d) { return d.condition === 'Control'})
+  var totalData = data.filter(function(d) { return d.participant_id})
   
   var totalParticipants = data.filter(function(d) { return d.days_from_baseline === 0})
   console.log(totalParticipants);
@@ -45,12 +46,12 @@ function lineChart(data){
   for(var i = 0; i < totalParticipants.length; i++){
     par.push(totalParticipants[i].participant_id)
   }
-  console.log(par)
+  //console.log(par)
   var participantIDDict = {}
   for(var i = 0; i < par.length; i++ ){
-    participantIDDict[i] = par[i]
+    participantIDDict[par[i]] = i
   }
-  console.log(participantIDDict)
+  //console.log(participantIDDict)
 
   ///////////////////////// CONTROL //////////////////////////////
   var yesVASexControl = control.filter(function(d){ return d.va_sex === 'Yes'})
@@ -522,7 +523,41 @@ let svg3 = d3.select('#vis-svg-3')
     .attr("class", "main-grid")
     .call(xgridlines);
     
-    
+    //console.log(totalData)
+
+    for(var i = 0; i < totalData.length; i++){
+      //console.log(totalData[i])
+      pid = totalData[i].participant_id
+      pidToOrderedNum = participantIDDict[pid]
+      dayFromBase = totalData[i].days_from_baseline
+      //placeAllShapes(pid, dayFromBase, objectNum)
+      if (totalData[i].condom_used === "Yes"){
+        var tri = draw(d3.symbolTriangle, dayFromBase, pidToOrderedNum,'#69a3b2', 1);
+      }
+      if (totalData[i].dating_violence === "Yes"){
+        var tri = draw(d3.symbolCircle, dayFromBase, pidToOrderedNum,'#ffc0cb', 1);
+      }
+      if (totalData[i].forced_sex === "Yes"){
+        var tri = draw(d3.symbolCross, dayFromBase, pidToOrderedNum,'#40e0d0', 1);
+      }
+      if (totalData[i].partner_au === "Yes"){
+        var tri = draw(d3.symbolDiamond, dayFromBase, pidToOrderedNum,'#a633ff', 1);
+      }
+      if (totalData[i].partner_du === "Yes"){
+        var tri = draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+      }
+      if (totalData[i].self_au === "Yes"){
+        var tri = draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+      }
+      if (totalData[i].self_du === "Yes"){
+        var tri = draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+      }
+      if (totalData[i].va_sex === "Yes"){
+        var s = svg3.append("rect")
+        .attr("class", "rectangle");
+        drawRect(s, dayFromBase, pidToOrderedNum)
+      }
+    }
 
     /**
      * For each data point
@@ -579,7 +614,7 @@ let svg3 = d3.select('#vis-svg-3')
 
 
     // an few example calls
-    var tri = draw(d3.symbolTriangle,25, 25,'#69a3b2', 1);
+    /*var tri = draw(d3.symbolTriangle,25, 25,'#69a3b2', 1);
     var wye = draw(d3.symbolWye, 1, 3,'#ffc0cb', 1);
     var star = draw(d3.symbolStar, 1, 4,'#40e0d0', 1);
     var cross = draw(d3.symbolCross, 1, 5, '#40e0d0', 1);
@@ -588,7 +623,7 @@ let svg3 = d3.select('#vis-svg-3')
     var square = draw(d3.symbolSquare, 1,8, '#40e0d0', 1);
     var rect = svg3.append("rect")
     .attr("class", "rectangle");
-    drawRect(rect, 1, 9);
+    drawRect(rect, 1, 9);*/
      
 
     function drawRect(shape, xPos, yPos) {
