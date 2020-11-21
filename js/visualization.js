@@ -41,7 +41,16 @@ function lineChart(data){
   
   var totalParticipants = data.filter(function(d) { return d.days_from_baseline === 0})
   console.log(totalParticipants);
-  
+  var par = new Array()
+  for(var i = 0; i < totalParticipants.length; i++){
+    par.push(totalParticipants[i].participant_id)
+  }
+  console.log(par)
+  var participantIDDict = {}
+  for(var i = 0; i < par.length; i++ ){
+    participantIDDict[i] = par[i]
+  }
+  console.log(participantIDDict)
 
   ///////////////////////// CONTROL //////////////////////////////
   var yesVASexControl = control.filter(function(d){ return d.va_sex === 'Yes'})
@@ -407,7 +416,7 @@ let svg2 = d3.select('#vis-svg-2')
   .attr('class', 'dataLine7');
 
 
-  function gridData() {
+  /*function gridData() {
     var data = new Array();
     var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
     var ypos = 1;
@@ -437,7 +446,7 @@ let svg2 = d3.select('#vis-svg-2')
     return data;
 }
 
-var gridData = gridData();
+var gridData = gridData();*/
 
 // VISUALIZATION # 3
 let svg3 = d3.select('#vis-svg-3')
@@ -445,29 +454,159 @@ let svg3 = d3.select('#vis-svg-3')
     .attr('preserveAspectRatio', 'xMidYMid meet') // this will scale your visualization according to the size of the page.
     .attr('width', '100%') // this is now required by Chrome to ensure the SVG shows up at all
     .style('background-color', '#ccc') // change the background color to white
-    .attr('viewBox', [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom].join(' '))
-
+    .attr('viewBox', [-30, -30, width + margin.left + margin.right, height + margin.top + margin.bottom].join(' '))
+    //.attr('viewBox', [-30, -30, width + margin.left + margin.right, height /3 ].join(' '))
+    
     var chartGroup = svg3
     .append('g')
     .attr('transform','translate(' + margin.left +',' + margin.top + ')');
 
-  
-    var row = svg3.selectAll(".row")
-    .data(gridData)
-    .enter().append("g")
-    .attr("class", "row");
-  
-    var column = row.selectAll(".square")
-    .data(function(d) { return d; })
-    .enter().append("rect")
-    .attr("class","square")
-    .attr("x", function(d) { return d.x; })
-    .attr("y", function(d) { return d.y; })
-    .attr("width", function(d) { return d.width; })
-    .attr("height", function(d) { return d.height; })
-    .style("fill", "#fff")
-    .style("stroke", "#222");
+    var w = width + margin.left + margin.right - 100;
+    var h = height + margin.top + margin.bottom + 300;
 
+  //PREPARE SCALES   
+    var xScale3 = d3.scaleLinear()
+    //accepts
+    .domain([0, 100])
+    //outputs
+    .range([0, w]);
+
+    var yScale3 = d3.scaleLinear()
+    //accepts
+    .domain([0, totalParticipants.length])
+    //outputs
+    .range([0, h]);
+
+    //PREPARE AXES 
+    var xAxisBottom = d3.axisBottom(xScale3).ticks(100); 
+    var xAxisTop = d3.axisTop(xScale3).ticks(100);   
+    var yAxisLeft = d3.axisLeft(yScale3).ticks(100); 
+    var yAxisRight = d3.axisRight(yScale3).ticks(100);       
+
+    //DRAW AXES
+    svg3.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(0," + h + ")")
+    .call(xAxisBottom);
+
+    svg3.append("g")
+    .attr("class", "axis")
+    .call(xAxisTop);
+
+    svg3.append("g")
+    .attr("class", "axis")
+    .call(yAxisLeft);
+
+    svg3.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(" + w + ",0)")   
+    .call(yAxisRight);
+
+   /* var ygridlines = d3.axisTop()
+                 .tickFormat("")
+                 .tickSize(-h)
+                 .ticks(10)
+                 .scale(xScale);*/
+
+    var xgridlines = d3.axisLeft()
+                 .tickFormat("")
+                 .tickSize(-w)
+                 .ticks(20)
+                 .scale(yScale3);
+
+    /*svg3.append("g")
+    .attr("class", "main-grid")
+    .call(ygridlines);*/
+    
+    svg3.append("g")
+    .attr("class", "main-grid")
+    .call(xgridlines);
+    
+    
+
+    /**
+     * For each data point
+     *  1) get variable value (that has to do with shape)
+     *  2) get participant id
+     *      a) match participant id to key in dict
+     *      b) yScale3(key -.5)
+     *  3) get day from baseline
+     *      a) xScale(day -.5)
+     *  4) place shape there 
+     * 
+     */
+
+
+
+    
+/*
+     for(objectNum = 0; objectNum < arraytotal; objectNum++ ){
+       pid = array[objectNum].getParticipantID
+       pidToOrderedNum = dict.get(pid)
+       dayFromBase = array[objectNum].getDaysFromBase
+       placeAllShapes(pid, dayFromBase, objectNum)
+     }
+
+
+     function placeAllShapes(x, y, obj){
+      for(i = 0; i < num; i++ ){
+        
+      }
+     }*/
+     
+
+       // draws from these shape options: d3.symbolCirlce, d3.symbolCross,
+    //   d3.symbolDiamond, d3.symbolSquare, d3.symbolStar, d3.symbolTriangle,
+    //   d3.symbolWye
+    // code help from
+    //   https://chewett.co.uk/blog/1485/drawing-shapes-in-d3-js-version-5/
+    //   https://chewett.co.uk/blog/1483/d3-js-version-5-scatterplot-with-shapes/
+    function draw(shape, x, y, color, size) {
+      var shape = svg3.append("path")
+        .attr("class", "point")
+        .attr("d", d3.symbol().type(shape).size(size * 5))
+        .attr("transform", function(d){
+          return "translate(" + xScale3(x) + "," + yScale3(y) + ")"; })
+        .attr('fill', color);
+      return shape;
+    }
+
+
+ 
+    //select shape
+    var s = svg3.append("rect")
+    .attr("class", "rectangle");
+
+
+    // an few example calls
+    var tri = draw(d3.symbolTriangle,25, 25,'#69a3b2', 1);
+    var wye = draw(d3.symbolWye, 1, 3,'#ffc0cb', 1);
+    var star = draw(d3.symbolStar, 1, 4,'#40e0d0', 1);
+    var cross = draw(d3.symbolCross, 1, 5, '#40e0d0', 1);
+    var diamond = draw(d3.symbolDiamond, 1, 6, '#40e0d0', 1);
+    var circle = draw(d3.symbolCircle, 1, 7, '#40e0d0', 1);
+    var square = draw(d3.symbolSquare, 1,8, '#40e0d0', 1);
+    var rect = svg3.append("rect")
+    .attr("class", "rectangle");
+    drawRect(rect, 1, 9);
+     
+
+    function drawRect(shape, xPos, yPos) {
+      var yScaleVal = .8
+      var xScaleVal = .4
+      shape.attr("height",function(d){
+        return yScale3(yScaleVal);})
+      .attr("width", function(d){
+         return xScale3(xScaleVal);})
+      .attr("y",function(d){
+         return yScale3(yPos - (yScaleVal/2));})
+      .attr("x",function(d){
+         return xScale3(xPos - (xScaleVal/2));});  
+    }
+
+
+    
+    //placeShape(s2, 1, 2);
 /* 
     //create the scale for the xAxis
   var xScale3 = d3.scaleBand() // ordinal??

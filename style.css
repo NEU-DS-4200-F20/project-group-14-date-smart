@@ -25,6 +25,15 @@ h1, h2, h3 {
   background-color: #f4f1f0;
 }
 
+.vis-3-holder {
+	overflow-y:scroll;
+	overflow-x:scroll;
+}
+
+#vis-svg-3 {
+	width: 2500px;
+}
+
 /* Fork on GitHub ribbon via https://codepo8.github.io/css-fork-on-github-ribbon/# */  
 #forkongithub a{
 	background:#00F;
