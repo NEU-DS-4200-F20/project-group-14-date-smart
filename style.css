@@ -26,12 +26,14 @@ h1, h2, h3 {
 }
 
 .vis-3-holder {
-	overflow-y:scroll;
+	height: 2700px;
+	width: 100%;
+	overflow-y:hidden;
 	overflow-x:scroll;
 }
 
 #vis-svg-3 {
-	width: 2500px;
+	width: 6000px;
 }
 
 /* Fork on GitHub ribbon via https://codepo8.github.io/css-fork-on-github-ribbon/# */  

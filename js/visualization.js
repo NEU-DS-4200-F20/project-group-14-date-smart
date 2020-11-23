@@ -39,9 +39,11 @@ function lineChart(data){
   var dateSMART = data.filter(function(d){ return d.condition === 'DateSMART'})
   var control = data.filter(function(d) { return d.condition === 'Control'})
   var totalData = data.filter(function(d) { return d.participant_id})
+
+
   
   var totalParticipants = data.filter(function(d) { return d.days_from_baseline === 0})
-  console.log(totalParticipants);
+  //console.log(totalParticipants);
   var par = new Array()
   for(var i = 0; i < totalParticipants.length; i++){
     par.push(totalParticipants[i].participant_id)
@@ -152,7 +154,7 @@ function lineChart(data){
   ForcedSexDS.set(1, rollupForcedSexDS.get(1))
   ForcedSexDS.set(2, rollupForcedSexDS.get(2))
   ForcedSexDS.set(3, rollupForcedSexDS.get(3))
-  ForcedSexDS.set(4, rollupForcedSexDS.get(4))
+  ForcedSexDS.set(4, 0)
 
   var yesSelfDUDS = dateSMART.filter(function(d){ return d.self_du === 'Yes'})
   var rollupSelfDUDS = d3.rollup(yesSelfDUDS, v => d3.sum(v, d => d.self_du === 'Yes'), d => d.timepoint_code)
@@ -198,8 +200,6 @@ function lineChart(data){
   DVDS.set(2, rollupDVDS.get(2))
   DVDS.set(3, rollupDVDS.get(3))
   DVDS.set(4, rollupDVDS.get(4))
-
-
 
 
   let margin = {
@@ -255,10 +255,22 @@ function lineChart(data){
    svg.append("text")
         .attr("x", width - 150)             
         .attr("y", 30 )
-        .attr("text-anchor", "middle")  
-        .style("font-size", "16px") 
+        .attr("text-anchor", "middle") 
+        .style("font-size", "10px") 
         .style("text-decoration", "underline")  
-        .text("Control Group 'Yes' Responses");
+        .text("Control Group and Date SMART 'Yes' Responses");
+
+  var variablesList = ['Sex', 'Condom Used', 'Forced Sex', 'Self Drug Use', 'Self Alcohol Use', 'Partner Drug Use', 'Partner Alcohol Use', 'Dating Violence']
+
+  // add the options to the button
+  d3.select("#selectButton")
+  .selectAll('myOptions')
+   .data(variablesList)
+  .enter()
+  .append('option')
+  .text(function (d) { return d; }) // text showed in the menu
+  .attr("value", function (d) { return d; }) // corresponding value returned by the button
+
 
   //create the yAxis
   var yAxis = d3.axisLeft(yScale);
@@ -288,135 +300,190 @@ function lineChart(data){
    return yScale(d[1])
  })
 
- //draw the line -- CONTROL GROUP
- chartGroup.append('path')
- .attr('d', line(VASexControl))
- .attr('class', 'dataLine'); 
 
- //draw the line
- chartGroup.append('path')
- .attr('d', line(CondomControl))
- .attr('class', 'dataLine1'); 
+ var controlLine = chartGroup
+      .append("path")
+        .datum(data.filter(function(d){return d.va_sex==variablesList[0]}))
+        .attr('d', line(VASexControl))
+        .style("stroke-dasharray", ("3, 3"))
+        .attr('class', 'dataLine');
 
- chartGroup.append('path')
- .attr('d', line(FSControl))
- .attr('class', 'dataLine2'); 
-
- chartGroup.append('path')
- .attr('d', line(SDUControl))
- .attr('class', 'dataLine3');
-
- chartGroup.append('path')
- .attr('d', line(SAUControl))
- .attr('class', 'dataLine4');
-
- chartGroup.append('path')
- .attr('d', line(PDUControl))
- .attr('class', 'dataLine5');
-
- chartGroup.append('path')
- .attr('d', line(PAUControl))
- .attr('class', 'dataLine6');
-
- chartGroup.append('path')
- .attr('d', line(DVControl))
- .attr('class', 'dataLine7');
-
-
-
-
-
-// VISUALIZATION #2
-let svg2 = d3.select('#vis-svg-2')
-    .append('svg')
-    .attr('preserveAspectRatio', 'xMidYMid meet') // this will scale your visualization according to the size of the page.
-    .attr('width', '100%') // this is now required by Chrome to ensure the SVG shows up at all
-    .style('background-color', '#ccc') // change the background color to white
-    .attr('viewBox', [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom].join(' '))
-
-    var chartGroup = svg2
-    .append('g')
-    .attr('transform','translate(' + margin.left +',' + margin.top + ')');
-
-  //create the xAxis
-  var xAxis = d3.axisBottom(xScale);
-  chartGroup.append('g')
-  .attr('class', 'x axis')
-  .attr('transform', 'translate(-42, ' + (height - margin.bottom - margin.top) + ')')
-  .call(xAxis);
-
-   // text label for the x axis
-   // https://stackoverflow.com/questions/11189284/d3-axis-labeling
-   svg2.append("text")
-   .attr("class", "xlabel")
-   .attr("text-anchor", "end")
-   .attr("x", width - 150)
-   .attr("y", height - 6)
-   .text("Timepoint");
-
-   // title
-   // http://www.d3noob.org/2013/01/adding-title-to-your-d3js-graph.html
-   svg2.append("text")
-        .attr("x", width - 150)             
-        .attr("y", 30 )
-        .attr("text-anchor", "middle")  
-        .style("font-size", "16px") 
-        .style("text-decoration", "underline")  
-        .text("Date SMART Group 'Yes' Responses");
-
-  //create the yAxis
-  var yAxis = d3.axisLeft(yScale);
-  chartGroup.append('g')
-  .attr('class', 'y axis')
-  .attr('transform', 'translate(0, 0)')
-  .call(yAxis); 
-  
-  // text label for the y axis
-  // https://stackoverflow.com/questions/11189284/d3-axis-labeling
-  svg2.append("text")
-  .attr("class", "ylabel")
-  .attr("text-anchor", "end")
-  .attr("x", -200)
-  .attr("y", 6)
-  .attr("dy", ".20em")
-  .attr("transform", "rotate(-90)")
-  .text("# of Yes Responses");   
-
-
-  //draw the line
-  chartGroup.append('path')
-  .attr('d', line(VASDS))
-  .attr('class', 'dataLine'); 
-
-  chartGroup.append('path')
-  .attr('d', line(CondomDS))
-  .attr('class', 'dataLine1'); 
+  var dsLine = chartGroup
+        .append("path")
+        .datum(data.filter(function(d){return d.va_sex==variablesList[0]}))
+        .attr('d', line(VASDS))
+        .attr('class', 'dataLine')
+        
  
-  chartGroup.append('path')
-  .attr('d', line(ForcedSexDS))
-  .attr('class', 'dataLine2'); 
- 
-  chartGroup.append('path')
-  .attr('d', line(SelfDUDS))
-  .attr('class', 'dataLine3');
- 
-  chartGroup.append('path')
-  .attr('d', line(SelfAUDS))
-  .attr('class', 'dataLine4');
- 
-  chartGroup.append('path')
-  .attr('d', line(PartnerDUDS))
-  .attr('class', 'dataLine5');
- 
-  chartGroup.append('path')
-  .attr('d', line(PartnerAUDS))
-  .attr('class', 'dataLine6');
- 
-  chartGroup.append('path')
-  .attr('d', line(DVDS))
-  .attr('class', 'dataLine7');
+
+ // line filter 
+ // https://www.d3-graph-gallery.com/graph/line_filter.html
+ function update(selectedGroup) {
+
+  if (selectedGroup == 'Sex') {
+    var dataFilter = data.filter(function(d){return d.va_sex==variablesList[0]})
+
+    // Give these new data to update line
+    controlLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(VASexControl)
+    )
+    .attr('class', 'dataLine')
+
+    dsLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(VASDS)
+    )
+    .attr('class', 'dataLine')
+  }
+
+  if (selectedGroup == 'Condom Used') {
+    var dataFilter = data.filter(function(d){return d.condom_used==variablesList[1]})
+
+    // Give these new data to update line
+    controlLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(CondomControl)
+    )
+
+    dsLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(CondomDS)
+    )
+  }
 
 
+  if (selectedGroup == 'Forced Sex') {
+    var dataFilter = data.filter(function(d){return d.forced_sex==variablesList[2]})
+
+    // Give these new data to update line
+    controlLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(FSControl)
+    )
+
+    dsLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(ForcedSexDS)
+    )
+  }
+
+  if (selectedGroup == 'Self Drug Use') {
+    var dataFilter = data.filter(function(d){return d.self_du==variablesList[3]})
+
+    // Give these new data to update line
+    controlLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(SDUControl)
+    )
+
+    dsLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(SelfDUDS)
+    )
+  }
+
+  if (selectedGroup == 'Self Alcohol Use') {
+    var dataFilter = data.filter(function(d){return d.self_au==variablesList[3]})
+
+    // Give these new data to update line
+    controlLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(SAUControl)
+    )
+
+    dsLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(SelfAUDS)
+    )
+  }
+
+  if (selectedGroup == 'Partner Drug Use') {
+    var dataFilter = data.filter(function(d){return d.partner_du==variablesList[4]})
+
+    // Give these new data to update line
+    controlLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(PDUControl)
+    )
+
+    dsLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(PartnerDUDS)
+    )
+  }
+
+  if (selectedGroup == 'Partner Alcohol Use') {
+    var dataFilter = data.filter(function(d){return d.partner_au==variablesList[5]})
+
+    // Give these new data to update line
+    controlLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(PAUControl)
+    )
+
+    dsLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(PartnerAUDS)
+    )
+  }
+
+  if (selectedGroup == 'Dating Violence') {
+    var dataFilter = data.filter(function(d){return d.dating_violence==variablesList[6]})
+
+    // Give these new data to update line
+    controlLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(DVControl)
+    )
+
+    dsLine 
+    .datum(dataFilter)
+    .transition()
+    .duration(1000)
+    .attr("d", line(DVDS)
+    )
+  }
+ 
+}
+
+// When the button is changed, run the updateChart function
+d3.select("#selectButton").on("change", function(d) {
+    // recover the option that has been chosen
+    var selectedOption = d3.select(this).property("value")
+    // run the updateChart function with this selected option
+    update(selectedOption)
+})
   /*function gridData() {
     var data = new Array();
     var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
@@ -455,20 +522,19 @@ let svg3 = d3.select('#vis-svg-3')
     .attr('preserveAspectRatio', 'xMidYMid meet') // this will scale your visualization according to the size of the page.
     .attr('width', '100%') // this is now required by Chrome to ensure the SVG shows up at all
     .style('background-color', '#ccc') // change the background color to white
-    .attr('viewBox', [-30, -30, width + margin.left + margin.right, height + margin.top + margin.bottom].join(' '))
-    //.attr('viewBox', [-30, -30, width + margin.left + margin.right, height /3 ].join(' '))
+    .attr('viewBox', [-30, 600, width*4 + margin.left + margin.right, height + margin.top + margin.bottom].join(' '))
     
     var chartGroup = svg3
     .append('g')
     .attr('transform','translate(' + margin.left +',' + margin.top + ')');
 
-    var w = width + margin.left + margin.right - 100;
-    var h = height + margin.top + margin.bottom + 300;
+    var w = width*4.1 + margin.left + margin.right - 100;
+    var h = height*.75 + margin.top + margin.bottom + 300;
 
-  //PREPARE SCALES   
+  //PREPARE SCALES
     var xScale3 = d3.scaleLinear()
     //accepts
-    .domain([0, 100])
+    .domain([0, 460])
     //outputs
     .range([0, w]);
 
@@ -478,11 +544,11 @@ let svg3 = d3.select('#vis-svg-3')
     //outputs
     .range([0, h]);
 
-    //PREPARE AXES 
-    var xAxisBottom = d3.axisBottom(xScale3).ticks(100); 
-    var xAxisTop = d3.axisTop(xScale3).ticks(100);   
-    var yAxisLeft = d3.axisLeft(yScale3).ticks(100); 
-    var yAxisRight = d3.axisRight(yScale3).ticks(100);       
+    //PREPARE AXES
+    var xAxisBottom = d3.axisBottom(xScale3).ticks(92);
+    var xAxisTop = d3.axisTop(xScale3).ticks(92);
+    var yAxisLeft = d3.axisLeft(yScale3).ticks(50);
+    var yAxisRight = d3.axisRight(yScale3).ticks(50);    
 
     //DRAW AXES
     svg3.append("g")
@@ -530,32 +596,34 @@ let svg3 = d3.select('#vis-svg-3')
       pid = totalData[i].participant_id
       pidToOrderedNum = participantIDDict[pid]
       dayFromBase = totalData[i].days_from_baseline
-      //placeAllShapes(pid, dayFromBase, objectNum)
-      if (totalData[i].condom_used === "Yes"){
-        var tri = draw(d3.symbolTriangle, dayFromBase, pidToOrderedNum,'#69a3b2', 1);
-      }
-      if (totalData[i].dating_violence === "Yes"){
-        var tri = draw(d3.symbolCircle, dayFromBase, pidToOrderedNum,'#ffc0cb', 1);
-      }
-      if (totalData[i].forced_sex === "Yes"){
-        var tri = draw(d3.symbolCross, dayFromBase, pidToOrderedNum,'#40e0d0', 1);
-      }
-      if (totalData[i].partner_au === "Yes"){
-        var tri = draw(d3.symbolDiamond, dayFromBase, pidToOrderedNum,'#a633ff', 1);
-      }
-      if (totalData[i].partner_du === "Yes"){
-        var tri = draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
-      }
-      if (totalData[i].self_au === "Yes"){
-        var tri = draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
-      }
-      if (totalData[i].self_du === "Yes"){
-        var tri = draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
-      }
-      if (totalData[i].va_sex === "Yes"){
-        var s = svg3.append("rect")
-        .attr("class", "rectangle");
-        drawRect(s, dayFromBase, pidToOrderedNum)
+      if (dayFromBase < 460) {
+        //placeAllShapes(pid, dayFromBase, objectNum)
+        if (totalData[i].condom_used === "Yes"){
+          var tri = draw(d3.symbolTriangle, dayFromBase, pidToOrderedNum,'#69a3b2', 1);
+        }
+        if (totalData[i].dating_violence === "Yes"){
+          var tri = draw(d3.symbolCircle, dayFromBase, pidToOrderedNum,'#ffc0cb', 1);
+        }
+        if (totalData[i].forced_sex === "Yes"){
+          var tri = draw(d3.symbolCross, dayFromBase, pidToOrderedNum,'#40e0d0', 1);
+        }
+        if (totalData[i].partner_au === "Yes"){
+          var tri = draw(d3.symbolDiamond, dayFromBase, pidToOrderedNum,'#a633ff', 1);
+        }
+        if (totalData[i].partner_du === "Yes"){
+          var tri = draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+        }
+        if (totalData[i].self_au === "Yes"){
+          var tri = draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+        }
+        if (totalData[i].self_du === "Yes"){
+          var tri = draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+        }
+        if (totalData[i].va_sex === "Yes"){
+          var s = svg3.append("rect")
+          .attr("class", "rectangle");
+          drawRect(s, dayFromBase, pidToOrderedNum)
+        }
       }
     }
 
