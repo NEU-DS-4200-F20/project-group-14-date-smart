@@ -484,37 +484,6 @@ d3.select("#selectButton").on("change", function(d) {
     // run the updateChart function with this selected option
     update(selectedOption)
 })
-  /*function gridData() {
-    var data = new Array();
-    var xpos = 1; //starting xpos and ypos at 1 so the stroke will show when we make the grid below
-    var ypos = 1;
-    var width = 50;
-    var height = 50;
-
-    // iterate for rows 
-    for (var row = 0; row < 10; row++) {
-        data.push( new Array() );
-
-        // iterate for cells/columns inside rows
-        for (var column = 0; column < 10; column++) {
-            data[row].push({
-                x: xpos,
-                y: ypos,
-                width: width,
-                height: height
-            })
-            // increment the x position. I.e. move it over by 50 (width variable)
-            xpos += width;
-        }
-        // reset the x position after a row is complete
-        xpos = 1;
-        // increment the y position for the next row. Move it down 50 (height variable)
-        ypos += height; 
-    }
-    return data;
-}
-
-var gridData = gridData();*/
 
 // VISUALIZATION # 3
 let svg3 = d3.select('#vis-svg-3')
@@ -524,6 +493,38 @@ let svg3 = d3.select('#vis-svg-3')
     .style('background-color', '#ccc') // change the background color to white
     .attr('viewBox', [-30, 600, width*4 + margin.left + margin.right, height + margin.top + margin.bottom].join(' '))
     
+
+    var triangleU = d3.symbol().type(d3.symbolTriangle)(),
+circle = d3.symbol().type(d3.symbolCircle)(),
+cross = d3.symbol().type(d3.symbolCross)(),
+diamond = d3.symbol().type(d3.symbolDiamond)(),
+star = d3.symbol().type(d3.symbolStar)();
+
+//example output of d3.svg.symbol().type('circle')();
+//"M0,4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,
+//-4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,4.51351666838205Z"
+
+//https://d3-legend.susielu.com/#color-examples
+//generates legend
+/*var symbolScale =  d3.scaleOrdinal()
+.domain(['a longer label','b','c', 'd', 'e'])
+.range([ triangleU, circle, cross, diamond, star] );
+svg3.append("g")
+.attr("class", "legendSymbol")
+.attr("transform", "translate(0, 0)");
+
+var legendPath = d3.legendSymbol()
+.scale(symbolScale)
+.orient("horizontal")
+.labelFormat(".03f")
+.labelWrap(30)
+.title("Symbol Legend Title")
+//.on("cellclick", function(d){alert("clicked " + d);});
+
+svg3.select(".legendSymbol")
+.call(legendPath);*/
+
+
     var chartGroup = svg3
     .append('g')
     .attr('transform','translate(' + margin.left +',' + margin.top + ')');
@@ -590,11 +591,15 @@ let svg3 = d3.select('#vis-svg-3')
     .call(xgridlines);
     
     //console.log(totalData)
-
+    //This places shapes on the svg according to particular variable categories by participantID (Y)
+    // and day from baseline(X). 
     for(var i = 0; i < totalData.length; i++){
       //console.log(totalData[i])
+      //gets participant ID
       pid = totalData[i].participant_id
+      //translates participant ID to numbered ID from 0 to length -1 of participant IDs
       pidToOrderedNum = participantIDDict[pid]
+      //gets days from baseline
       dayFromBase = totalData[i].days_from_baseline
       if (dayFromBase < 460) {
         //placeAllShapes(pid, dayFromBase, objectNum)
@@ -707,7 +712,24 @@ let svg3 = d3.select('#vis-svg-3')
          return xScale3(xPos - (xScaleVal/2));});  
     }
 
+             
 
+       
+     
+
+   /* svg3.append("g")
+  .attr("class", "legendQuant")
+  .attr("transform", "translate(20,20)");
+
+var legend = d3.legendColor()
+  .labelFormat(d3.format(".2f"))
+  .useClass(true)
+  .title("A really really really really")
+  .titleWidth(10)
+  .scale(yScale3);
+
+svg3.select(".legendQuant")
+  .call(legend);*/
     
     //placeShape(s2, 1, 2);
 /* 
