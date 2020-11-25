@@ -40,6 +40,10 @@ function lineChart(data){
   var control = data.filter(function(d) { return d.condition === 'Control'})
   var totalData = data.filter(function(d) { return d.participant_id})
 
+  let dispatch = d3.dispatch('changeColor');
+  let dispatch2 = d3.dispatch('changeColor2');
+
+
 
   
   var totalParticipants = data.filter(function(d) { return d.days_from_baseline === 0})
@@ -232,6 +236,7 @@ function lineChart(data){
 
   var chartGroup = svg
     .append('g')
+    .attr("class", "line-and-dots")
     .attr('transform','translate(' + margin.left +',' + margin.top + ')');
 
   //create the xAxis
@@ -288,8 +293,11 @@ function lineChart(data){
   .attr("y", 6)
   .attr("dy", ".20em")
   .attr("transform", "rotate(-90)")
-  .text("# of Yes Responses");   
+  .text("# of Yes Responses");  
+  
 
+
+  //console.log(data.filter(function(d){return d.va_sex[0]}))
 
  //create the line
  var line = d3.line()
@@ -301,20 +309,446 @@ function lineChart(data){
  })
 
 
+ var listOfSelectedControlPoints = [];
+ var listOfSelectedDSPoints = [];
+ var dict = {};
+
+ for (var i in variablesList) {
+   dict[variablesList[i]] = false;
+ }
+
+
+
  var controlLine = chartGroup
       .append("path")
         .datum(data.filter(function(d){return d.va_sex==variablesList[0]}))
         .attr('d', line(VASexControl))
         .style("stroke-dasharray", ("3, 3"))
         .attr('class', 'dataLine');
+        
 
+
+        // draw plot circles
+/*    var dotC = chartGroup.append("g").selectAll("myCircles")
+        .data(VASexControl)
+        .enter()
+        .append("circle")
+          .attr("fill", "red")
+          .attr("stroke", "none")
+          .attr("cx", function(d) { return xScale(d[0]) })
+          .attr("cy", function(d) { return yScale(d[1]) })
+          .attr("r", 3)   */
+      
   var dsLine = chartGroup
         .append("path")
         .datum(data.filter(function(d){return d.va_sex==variablesList[0]}))
         .attr('d', line(VASDS))
-        .attr('class', 'dataLine')
+        .attr('class', 'dataLine');
         
+
+    // draw plot circles
+   var dotDS = chartGroup.append("g")
+      .selectAll(".pointsDS")
+      .data(VASDS)
+      .enter()
+      .append("circle")
+        .attr("class", "pointsDS")
+        .attr("fill", "red")
+        .attr("stroke", "none")
+        .attr("cx", function(d) { return xScale(d[0]) })
+        .attr("cy", function(d) { return yScale(d[1]) })
+        .attr("r", 3)  
+        .on("click", function() {dispatch2.call('changeColor2', this);})
  
+   var dotControl = chartGroup
+      .selectAll('.pointsControl')
+      .data(VASexControl)
+      .enter()
+      .append('circle')
+        .attr("class", "pointsControl")
+        .attr("cx", function(d) { return xScale(d[0]) })
+        .attr("cy", function(d) { return yScale(d[1]) })
+        .attr("r", 3)
+        .style("fill", "#69b3a2")
+        .on("click", function() {dispatch.call('changeColor', this);})
+      ;
+
+      dict['Sex'] = true;
+
+
+
+      //https://stackoverflow.com/questions/45464364/changing-css-fill-for-svg-with-js
+      dispatch.on('changeColor', function() {
+        var timepointClicked = (this.cx.baseVal.value) / 84
+        if (this.style.fill == "black") {
+          this.style.fill = "#69b3a2"
+          for (var i = 0; i < listOfSelectedControlPoints.length; i++) {
+            if (listOfSelectedControlPoints[i] == timepointClicked) {
+              listOfSelectedControlPoints.splice(i, i+1);
+            }
+          }
+        }
+        else {
+          this.style.fill = "black"
+          listOfSelectedControlPoints.push(timepointClicked)
+        }
+
+        var variableSelected;
+        for (var key in dict) {
+          if(dict[key] == true) {
+            variableSelected = key
+          }
+        }
+
+
+
+        svg3.selectAll(".point").remove();
+        svg3.selectAll(".rectangle").remove();
+
+        if (variableSelected === "Condom Used"){
+            //get the timepoints selected  
+            for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
+              var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})           
+              //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+              //for each of the filtered data points  -- draw specific variable shape
+              for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+                pid = filteredData[filteredDP].participant_id
+                pidToOrderedNum = participantIDDict[pid]
+                dayFromBase = filteredData[filteredDP].days_from_baseline
+                if (filteredData[filteredDP].condom_used === "Yes"){
+                  draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#69a3b2', 1) // change back to one
+                }
+              }
+            }
+        }
+
+        
+        if (variableSelected === "Dating Violence"){
+          //get the timepoints selected  
+          for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+            //for each of the filtered data points  -- draw specific variable shape
+            for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+              pid = filteredData[filteredDP].participant_id
+              pidToOrderedNum = participantIDDict[pid]
+              dayFromBase = filteredData[filteredDP].days_from_baseline
+              if (filteredData[filteredDP].dating_violence === "Yes"){
+                draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#ffc0cb', 1)
+              } // change back to one
+            }
+          }
+        }
+        if (variableSelected === "Forced Sex"){
+          for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+            //for each of the filtered data points  -- draw specific variable shape
+            for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+              pid = filteredData[filteredDP].participant_id
+              pidToOrderedNum = participantIDDict[pid]
+              dayFromBase = filteredData[filteredDP].days_from_baseline
+              if (filteredData[filteredDP].forced_sex === "Yes"){
+                draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#40e0d0', 1) // change back to one
+              }
+            }
+          }
+        }
+        if (variableSelected === "Partner Alcohol Use"){
+          for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+            //for each of the filtered data points  -- draw specific variable shape
+            for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+              pid = filteredData[filteredDP].participant_id
+              pidToOrderedNum = participantIDDict[pid]
+              dayFromBase = filteredData[filteredDP].days_from_baseline
+              if (filteredData[filteredDP].partner_au === "Yes"){
+                draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#a633ff', 1) 
+              }// change back to one
+            }
+          }
+        }
+        if (variableSelected === "Partner Drug Use"){
+          for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+            //for each of the filtered data points  -- draw specific variable shape
+            for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+              pid = filteredData[filteredDP].participant_id
+              pidToOrderedNum = participantIDDict[pid]
+              dayFromBase = filteredData[filteredDP].days_from_baseline
+              if (filteredData[filteredDP].partner_du === "Yes"){
+                draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+              }
+            }
+        }
+      }
+        if (variableSelected === "Self Alcohol Use"){
+          for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+            //for each of the filtered data points  -- draw specific variable shape
+            for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+              pid = filteredData[filteredDP].participant_id
+              pidToOrderedNum = participantIDDict[pid]
+              dayFromBase = filteredData[filteredDP].days_from_baseline
+              if (filteredData[filteredDP].self_au === "Yes"){
+                draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+              }
+            }
+        }
+      }
+        if (variableSelected === "Self Drug Use"){
+          for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+            //for each of the filtered data points  -- draw specific variable shape
+            for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+              pid = filteredData[filteredDP].participant_id
+              pidToOrderedNum = participantIDDict[pid]
+              dayFromBase = filteredData[filteredDP].days_from_baseline
+              if (filteredData[filteredDP].self_du === "Yes"){
+                draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+              }
+            }
+
+        }
+      }
+
+        if (variableSelected === 'Sex') {
+          for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+            //for each of the filtered data points  -- draw specific variable shape
+            for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+              pid = filteredData[filteredDP].participant_id
+              pidToOrderedNum = participantIDDict[pid]
+              dayFromBase = filteredData[filteredDP].days_from_baseline
+              svg3.selectAll("rect").remove();
+              var s = svg3.append("rect")
+              .attr("class", "rectangle");
+              if (filteredData[filteredDP].forced_sex === "Yes"){
+                drawRect(s, dayFromBase, pidToOrderedNum)
+              }
+            }
+        }
+      }
+      
+
+
+
+        
+        
+
+      });
+
+      dispatch2.on('changeColor2', function() {
+        var timepointClicked = (this.cx.baseVal.value) / 84
+        if (this.style.fill == "black") {
+          this.style.fill = "red"
+          for (var i = 0; i < listOfSelectedDSPoints.length; i++) {
+            if (listOfSelectedDSPoints[i] == timepointClicked) {
+              listOfSelectedDSPoints.splice(i, i+1);
+            }
+          }
+        }
+        else {
+          this.style.fill = "black"
+          listOfSelectedDSPoints.push(timepointClicked)
+        } 
+
+        
+        var variableSelected;
+        for (var key in dict) {
+          if(dict[key] == true) {
+            variableSelected = key
+          }
+        }
+
+
+
+        svg3.selectAll(".point").remove();
+        svg3.selectAll(".rectangle").remove();
+
+
+        if (variableSelected === "Condom Used"){
+          //get the timepoints selected  
+          for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
+            var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+            //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+            //for each of the filtered data points  -- draw specific variable shape
+            
+            for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+              pid = filteredData[filteredDP].participant_id
+              pidToOrderedNum = participantIDDict[pid]
+              dayFromBase = filteredData[filteredDP].days_from_baseline
+              console.log(dayFromBase)
+              if (dayFromBase < 460) {
+                draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#69a3b2', 1) // change back to one
+              }
+            }
+          }
+      }
+
+      
+      if (variableSelected === "Dating Violence"){
+        //get the timepoints selected  
+        for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+          //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+          //for each of the filtered data points  -- draw specific variable shape
+          for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+            pid = filteredData[filteredDP].participant_id
+            pidToOrderedNum = participantIDDict[pid]
+            dayFromBase = filteredData[filteredDP].days_from_baseline
+            draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#ffc0cb', 1) // change back to one
+          }
+        }
+      }
+      if (variableSelected === "Forced Sex"){
+        for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+          //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+          //for each of the filtered data points  -- draw specific variable shape
+          for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+            pid = filteredData[filteredDP].participant_id
+            pidToOrderedNum = participantIDDict[pid]
+            dayFromBase = filteredData[filteredDP].days_from_baseline
+            draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#40e0d0', 1) // change back to one
+          }
+        }
+      }
+      if (variableSelected === "Partner Alcohol Use"){
+        for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+          //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+          //for each of the filtered data points  -- draw specific variable shape
+          for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+            pid = filteredData[filteredDP].participant_id
+            pidToOrderedNum = participantIDDict[pid]
+            dayFromBase = filteredData[filteredDP].days_from_baseline
+            draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#a633ff', 1) // change back to one
+          }
+        }
+      }
+      if (variableSelected === "Partner Drug Use"){
+        for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+          //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+          //for each of the filtered data points  -- draw specific variable shape
+          for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+            pid = filteredData[filteredDP].participant_id
+            pidToOrderedNum = participantIDDict[pid]
+            dayFromBase = filteredData[filteredDP].days_from_baseline
+            draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+          }
+      }
+    }
+      if (variableSelected === "Self Alcohol Use"){
+        for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+          //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+          //for each of the filtered data points  -- draw specific variable shape
+          for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+            pid = filteredData[filteredDP].participant_id
+            pidToOrderedNum = participantIDDict[pid]
+            dayFromBase = filteredData[filteredDP].days_from_baseline
+            draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+          }
+      }
+    }
+      if (variableSelected === "Self Drug Use"){
+        for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})            
+          console.log(filteredData)  
+          //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+          //for each of the filtered data points  -- draw specific variable shape
+          for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+            pid = filteredData[filteredDP].participant_id
+            pidToOrderedNum = participantIDDict[pid]
+            dayFromBase = filteredData[filteredDP].days_from_baseline
+            console.log(dayFromBase)
+            draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+          }
+
+      }
+    }
+
+      if (variableSelected === 'Sex') {
+        for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+          //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
+          //for each of the filtered data points  -- draw specific variable shape
+          for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
+            pid = filteredData[filteredDP].participant_id
+            pidToOrderedNum = participantIDDict[pid]
+            dayFromBase = filteredData[filteredDP].days_from_baseline
+            var s = svg3.append("rect")
+            .attr("class", "rectangle");
+            drawRect(s, dayFromBase, pidToOrderedNum)
+          }
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+      });
+
+
+      dict['Sex'] = true;
+
+      
+      //console.log(dict)
+ 
+      var rollupControlVAs = d3.rollup(data, v => d3.sum(v, d => d.va_sex === 'Yes'), d => d.timepoint_code, d => d.condition)
+      var l = ["Control", "DateSMART"]
+
+    /*  var dotControlTest = chartGroup
+      .selectAll('circle')
+      .data(rollupControlVAs)
+      .enter()
+      .append('circle')
+        .attr("cx", function(d) { for (item in l) { return xScale(d[0])}})
+        .attr("cy", function(d) { for (item in l) {
+          return yScale(d[1].get(l[item])); }})
+          //console.log(d[1].get(l[item]))}})
+        
+        .attr("r", 3)
+        .style("fill", "#69b3a2")
+        .on("click", function(){dispatch.call('changeColor', this);})
+      ;  */
+
+
+
+
+      //console.log(rollupControlVAs.get(0))
+
+
+
+/* 
+
+  var dot = chartGroup
+        .selectAll('circle')
+        .data(VASDS)
+        .enter()
+        .append('circle')
+          .attr("cx", function(d) { return xScale(d[0]) })
+          .attr("cy", function(d) { return yScale(d[1]) })
+          .attr("r", 3)
+          .style("fill", "#695859"); */
+
+
+
+
+
 
  // line filter 
  // https://www.d3-graph-gallery.com/graph/line_filter.html
@@ -330,7 +764,10 @@ function lineChart(data){
     .duration(1000)
     .attr("d", line(VASexControl)
     )
-    .attr('class', 'dataLine')
+    .attr('class', 'dataLine');
+
+    
+  
 
     dsLine 
     .datum(dataFilter)
@@ -338,7 +775,30 @@ function lineChart(data){
     .duration(1000)
     .attr("d", line(VASDS)
     )
-    .attr('class', 'dataLine')
+    .attr('class', 'dataLine');
+
+    dotControl
+        .data(VASexControl)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0]) })
+          .attr("cy", function(d) { return yScale(d[1])});
+
+    dotDS
+        .data(VASDS)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0])})
+          .attr("cy", function(d) { return yScale(d[1])});
+          
+
+    for (var i in variablesList) {
+      dict[variablesList[i]] = false;
+    }
+
+    dict['Sex'] = true;
+
+
   }
 
   if (selectedGroup == 'Condom Used') {
@@ -352,14 +812,37 @@ function lineChart(data){
     .attr("d", line(CondomControl)
     )
 
+
+
     dsLine 
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(CondomDS)
     )
-  }
 
+    dotControl
+        .data(CondomControl)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0]) })
+          .attr("cy", function(d) { return yScale(d[1])})
+
+    dotDS
+        .data(CondomDS)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0])})
+          .attr("cy", function(d) { return yScale(d[1])});
+
+      
+    for (var i in variablesList) {
+      dict[variablesList[i]] = false;
+    }
+
+    dict['Condom Used'] = true;
+
+    }
 
   if (selectedGroup == 'Forced Sex') {
     var dataFilter = data.filter(function(d){return d.forced_sex==variablesList[2]})
@@ -378,6 +861,28 @@ function lineChart(data){
     .duration(1000)
     .attr("d", line(ForcedSexDS)
     )
+
+    dotControl
+        .data(FSControl)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0]) })
+          .attr("cy", function(d) { return yScale(d[1])})
+
+    dotDS
+        .data(ForcedSexDS)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0])})
+          .attr("cy", function(d) { return yScale(d[1])});
+
+          
+    for (var i in variablesList) {
+      dict[variablesList[i]] = false;
+    }
+
+    dict['Forced Sex'] = true;
+
   }
 
   if (selectedGroup == 'Self Drug Use') {
@@ -397,6 +902,29 @@ function lineChart(data){
     .duration(1000)
     .attr("d", line(SelfDUDS)
     )
+
+    dotControl
+        .data(SDUControl)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0]) })
+          .attr("cy", function(d) { return yScale(d[1])})
+
+
+    dotDS
+        .data(SelfDUDS)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0])})
+          .attr("cy", function(d) { return yScale(d[1])});
+
+    
+    for (var i in variablesList) {
+      dict[variablesList[i]] = false;
+    }
+
+    dict['Self Drug Use'] = true;
+
   }
 
   if (selectedGroup == 'Self Alcohol Use') {
@@ -416,6 +944,29 @@ function lineChart(data){
     .duration(1000)
     .attr("d", line(SelfAUDS)
     )
+
+    dotControl
+        .data(SAUControl)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0]) })
+          .attr("cy", function(d) { return yScale(d[1])})
+
+    dotDS
+        .data(SelfAUDS)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0])})
+          .attr("cy", function(d) { return yScale(d[1])});
+
+    
+    for (var i in variablesList) {
+      dict[variablesList[i]] = false;
+    }
+
+    dict['Self Alcohol Use'] = true;
+
+    console.log(dict)
   }
 
   if (selectedGroup == 'Partner Drug Use') {
@@ -435,6 +986,29 @@ function lineChart(data){
     .duration(1000)
     .attr("d", line(PartnerDUDS)
     )
+
+    dotControl
+        .data(PDUControl)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0]) })
+          .attr("cy", function(d) { return yScale(d[1])})
+
+    dotDS
+        .data(PartnerDUDS)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0])})
+          .attr("cy", function(d) { return yScale(d[1])});
+
+    
+    for (var i in variablesList) {
+      dict[variablesList[i]] = false;
+    }
+
+    dict['Partner Drug Use'] = true;
+
+    console.log(dict)
   }
 
   if (selectedGroup == 'Partner Alcohol Use') {
@@ -454,6 +1028,28 @@ function lineChart(data){
     .duration(1000)
     .attr("d", line(PartnerAUDS)
     )
+
+    dotControl
+        .data(PAUControl)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0]) })
+          .attr("cy", function(d) { return yScale(d[1])})
+
+    dotDS
+        .data(PartnerAUDS)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0])})
+          .attr("cy", function(d) { return yScale(d[1])});
+          
+    for (var i in variablesList) {
+      dict[variablesList[i]] = false;
+    }
+
+    dict['Partner Alcohol Use'] = true;
+
+    console.log(dict)
   }
 
   if (selectedGroup == 'Dating Violence') {
@@ -473,6 +1069,30 @@ function lineChart(data){
     .duration(1000)
     .attr("d", line(DVDS)
     )
+
+
+    dotControl
+        .data(DVControl)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0]) })
+          .attr("cy", function(d) { return yScale(d[1])})
+
+
+    dotDS
+        .data(DVDS)
+        .transition()
+        .duration(1000)
+          .attr("cx", function(d) { return xScale(d[0])})
+          .attr("cy", function(d) { return yScale(d[1])});
+    
+    for (var i in variablesList) {
+      dict[variablesList[i]] = false;
+    }
+
+    dict['Dating Violence'] = true;
+
+    console.log(dict)
   }
  
 }
@@ -596,6 +1216,7 @@ let svg3 = d3.select('#vis-svg-3')
       pid = totalData[i].participant_id
       pidToOrderedNum = participantIDDict[pid]
       dayFromBase = totalData[i].days_from_baseline
+      //console.log(dayFromBase)
       if (dayFromBase < 460) {
         //placeAllShapes(pid, dayFromBase, objectNum)
         if (totalData[i].condom_used === "Yes"){
