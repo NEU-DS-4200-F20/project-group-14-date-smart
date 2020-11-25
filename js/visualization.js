@@ -294,6 +294,30 @@ function lineChart(data){
   .attr("dy", ".20em")
   .attr("transform", "rotate(-90)")
   .text("# of Yes Responses");  
+
+
+  var svgLeg = d3.select(".vis-svg");
+
+  var symbolScale = d3.scaleOrdinal()
+  .domain(["- - - - - - - Control", "────── DateSMART"])
+  .range([]);
+
+
+  svgLeg.append("g")
+  .attr("class", "legendSymbol")
+  .attr("transform", "translate(20, 30)");
+ 
+
+  var legendPath = d3.legendSymbol()
+  .scale(symbolScale)
+  .labelWrap(1000)
+  .title("Legend");
+
+
+  svgLeg.select(".legendSymbol")
+  .call(legendPath);
+
+ 
   
 
 
@@ -501,7 +525,7 @@ function lineChart(data){
       }
         if (variableSelected === "Self Drug Use"){
           for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
-            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})            
             //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
             //for each of the filtered data points  -- draw specific variable shape
             for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -525,10 +549,9 @@ function lineChart(data){
               pid = filteredData[filteredDP].participant_id
               pidToOrderedNum = participantIDDict[pid]
               dayFromBase = filteredData[filteredDP].days_from_baseline
-              svg3.selectAll("rect").remove();
               var s = svg3.append("rect")
               .attr("class", "rectangle");
-              if (filteredData[filteredDP].forced_sex === "Yes"){
+              if (filteredData[filteredDP].va_sex === "Yes"){
                 drawRect(s, dayFromBase, pidToOrderedNum)
               }
             }
@@ -575,7 +598,7 @@ function lineChart(data){
         if (variableSelected === "Condom Used"){
           //get the timepoints selected  
           for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-            var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+            var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
             //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
             //for each of the filtered data points  -- draw specific variable shape
             
@@ -584,7 +607,7 @@ function lineChart(data){
               pidToOrderedNum = participantIDDict[pid]
               dayFromBase = filteredData[filteredDP].days_from_baseline
               console.log(dayFromBase)
-              if (dayFromBase < 460) {
+              if (filteredData[filteredDP].condom_used === "Yes") {
                 draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#69a3b2', 1) // change back to one
               }
             }
@@ -595,72 +618,83 @@ function lineChart(data){
       if (variableSelected === "Dating Violence"){
         //get the timepoints selected  
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
             pid = filteredData[filteredDP].participant_id
             pidToOrderedNum = participantIDDict[pid]
             dayFromBase = filteredData[filteredDP].days_from_baseline
-            draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#ffc0cb', 1) // change back to one
+            if (filteredData[filteredDP].dating_violence === "Yes"){
+              draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#ffc0cb', 1) // change back to one
+            }
           }
         }
       }
       if (variableSelected === "Forced Sex"){
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
             pid = filteredData[filteredDP].participant_id
             pidToOrderedNum = participantIDDict[pid]
             dayFromBase = filteredData[filteredDP].days_from_baseline
-            draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#40e0d0', 1) // change back to one
+            if (filteredData[filteredDP].forced_sex === "Yes"){
+              draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#40e0d0', 1)
+             } // change back to one
           }
         }
       }
       if (variableSelected === "Partner Alcohol Use"){
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
             pid = filteredData[filteredDP].participant_id
             pidToOrderedNum = participantIDDict[pid]
             dayFromBase = filteredData[filteredDP].days_from_baseline
-            draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#a633ff', 1) // change back to one
+            if (filteredData[filteredDP].partner_au === "Yes"){
+              draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#a633ff', 1) // change back to one
+            }
           }
         }
       }
       if (variableSelected === "Partner Drug Use"){
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
             pid = filteredData[filteredDP].participant_id
             pidToOrderedNum = participantIDDict[pid]
             dayFromBase = filteredData[filteredDP].days_from_baseline
-            draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+            if (filteredData[filteredDP].partner_du === "Yes"){
+              draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+            }
           }
       }
     }
       if (variableSelected === "Self Alcohol Use"){
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
             pid = filteredData[filteredDP].participant_id
             pidToOrderedNum = participantIDDict[pid]
             dayFromBase = filteredData[filteredDP].days_from_baseline
-            draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+            if (filteredData[filteredDP].self_au === "Yes"){
+              draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+            }
           }
       }
     }
       if (variableSelected === "Self Drug Use"){
+        console.log(listOfSelectedDSPoints)
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})            
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})         
           console.log(filteredData)  
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
@@ -668,8 +702,9 @@ function lineChart(data){
             pid = filteredData[filteredDP].participant_id
             pidToOrderedNum = participantIDDict[pid]
             dayFromBase = filteredData[filteredDP].days_from_baseline
-            console.log(dayFromBase)
-            draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+            if (filteredData[filteredDP].self_du === "Yes"){
+              draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+            }
           }
 
       }
@@ -677,7 +712,7 @@ function lineChart(data){
 
       if (variableSelected === 'Sex') {
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code == listOfSelectedControlPoints[tp]})              
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -686,10 +721,13 @@ function lineChart(data){
             dayFromBase = filteredData[filteredDP].days_from_baseline
             var s = svg3.append("rect")
             .attr("class", "rectangle");
-            drawRect(s, dayFromBase, pidToOrderedNum)
+            if (filteredData[filteredDP].va_sex === "Yes"){
+              drawRect(s, dayFromBase, pidToOrderedNum)
+            }
           }
       }
     }
+    
 
 
 
@@ -703,7 +741,6 @@ function lineChart(data){
       });
 
 
-      dict['Sex'] = true;
 
       
       //console.log(dict)
@@ -1151,6 +1188,8 @@ svg3.select(".legendSymbol")
 
     var w = width*4.1 + margin.left + margin.right - 100;
     var h = height*.75 + margin.top + margin.bottom + 300;
+    var legMove = 70;
+    var legMoveH = legMove + h;
 
   //PREPARE SCALES
     var xScale3 = d3.scaleLinear()
@@ -1163,22 +1202,31 @@ svg3.select(".legendSymbol")
     //accepts
     .domain([0, totalParticipants.length])
     //outputs
-    .range([0, h]);
+    .range([legMove, h + legMove]);
+
+    var yScale4 = d3.scaleLinear()
+    //accepts
+    .domain([0, totalParticipants.length])
+    //outputs
+    .range([0, h + legMove]);
+
+
 
     //PREPARE AXES
     var xAxisBottom = d3.axisBottom(xScale3).ticks(92);
     var xAxisTop = d3.axisTop(xScale3).ticks(92);
     var yAxisLeft = d3.axisLeft(yScale3).ticks(50);
-    var yAxisRight = d3.axisRight(yScale3).ticks(50);    
+    var yAxisRight = d3.axisRight(yScale3).ticks(50);
 
     //DRAW AXES
     svg3.append("g")
     .attr("class", "axis")
-    .attr("transform", "translate(0," + h + ")")
+    .attr("transform", "translate(0," + legMoveH + ")")
     .call(xAxisBottom);
 
     svg3.append("g")
     .attr("class", "axis")
+    .attr("transform", "translate(0," + legMove + ")")
     .call(xAxisTop);
 
     svg3.append("g")
@@ -1187,8 +1235,9 @@ svg3.select(".legendSymbol")
 
     svg3.append("g")
     .attr("class", "axis")
-    .attr("transform", "translate(" + w + ",0)")   
+    .attr("transform", "translate(" + w + ",0)")
     .call(yAxisRight);
+
 
    /* var ygridlines = d3.axisTop()
                  .tickFormat("")
@@ -1209,6 +1258,40 @@ svg3.select(".legendSymbol")
     svg3.append("g")
     .attr("class", "main-grid")
     .call(xgridlines);
+
+
+    var ordinal = d3.scaleOrdinal()
+    .domain(["Vaginal sex", "Condom used", "Forced sex", "Dating violence", "Partner alcohol use", "Partner drug use", "Self alcohol use", "Self drug use", " "])
+    .range(["#f4f1f0", "#000000", "#69a3b2", "#40e0d0", "#ffc0cb", "#a633ff", "#ff338d", "#33ff8c", "#9495e2"]);
+  
+  var svgLeg = d3.select("#vis-svg-3");
+  
+  
+  svgLeg.append("g")
+    .style("font", "3px arial")
+    .attr("class", "legendOrdinal")
+    .attr("transform", "translate(10, 5)");
+  
+   
+  
+  var legendOrdinal = d3.legendColor()
+    //d3 symbol creates a path-string, for example
+    //"M0,-8.059274488676564L9.306048591020996,
+    //8.059274488676564 -9.306048591020996,8.059274488676564Z"
+    .shape("path", d3.symbol().type(d3.symbolCircle).size(2)())
+    .shapePadding(1)
+    .labelOffset(2)
+    .labelAlign("start")
+    .title("Legend:")
+    .scale(ordinal);
+  
+  svgLeg.select(".legendOrdinal")
+    .call(legendOrdinal);
+
+
+
+
+
     
     //console.log(totalData)
     //This places shapes on the svg according to particular variable categories by participantID (Y)
@@ -1324,7 +1407,7 @@ svg3.select(".legendSymbol")
       var yScaleVal = .8
       var xScaleVal = .4
       shape.attr("height",function(d){
-        return yScale3(yScaleVal);})
+        return yScale4(yScaleVal);})
       .attr("width", function(d){
          return xScale3(xScaleVal);})
       .attr("y",function(d){
