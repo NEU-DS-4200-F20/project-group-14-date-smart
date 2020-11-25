@@ -439,8 +439,10 @@ function lineChart(data){
                 pid = filteredData[filteredDP].participant_id
                 pidToOrderedNum = participantIDDict[pid]
                 dayFromBase = filteredData[filteredDP].days_from_baseline
-                if (filteredData[filteredDP].condom_used === "Yes"){
-                  draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#69a3b2', 1) // change back to one
+                if (dayFromBase < 460) {
+                  if (filteredData[filteredDP].condom_used === "Yes"){
+                    draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#69a3b2', 1) // change back to one
+                  }
                 }
               }
             }
@@ -457,9 +459,11 @@ function lineChart(data){
               pid = filteredData[filteredDP].participant_id
               pidToOrderedNum = participantIDDict[pid]
               dayFromBase = filteredData[filteredDP].days_from_baseline
-              if (filteredData[filteredDP].dating_violence === "Yes"){
-                draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#ffc0cb', 1)
-              } // change back to one
+              if (dayFromBase < 460) {
+                if (filteredData[filteredDP].dating_violence === "Yes"){
+                  draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#ffc0cb', 1)
+                } // change back to one
+              }
             }
           }
         }
@@ -472,8 +476,10 @@ function lineChart(data){
               pid = filteredData[filteredDP].participant_id
               pidToOrderedNum = participantIDDict[pid]
               dayFromBase = filteredData[filteredDP].days_from_baseline
-              if (filteredData[filteredDP].forced_sex === "Yes"){
-                draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#40e0d0', 1) // change back to one
+              if (dayFromBase < 460) {
+                if (filteredData[filteredDP].forced_sex === "Yes"){
+                  draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#40e0d0', 1) // change back to one
+                }
               }
             }
           }
@@ -487,9 +493,11 @@ function lineChart(data){
               pid = filteredData[filteredDP].participant_id
               pidToOrderedNum = participantIDDict[pid]
               dayFromBase = filteredData[filteredDP].days_from_baseline
-              if (filteredData[filteredDP].partner_au === "Yes"){
-                draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#a633ff', 1) 
-              }// change back to one
+              if (dayFromBase < 460) {
+                if (filteredData[filteredDP].partner_au === "Yes"){
+                  draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#a633ff', 1) 
+                }// change back to one
+              }
             }
           }
         }
@@ -502,8 +510,10 @@ function lineChart(data){
               pid = filteredData[filteredDP].participant_id
               pidToOrderedNum = participantIDDict[pid]
               dayFromBase = filteredData[filteredDP].days_from_baseline
-              if (filteredData[filteredDP].partner_du === "Yes"){
-                draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+              if (dayFromBase < 460) {
+                if (filteredData[filteredDP].partner_du === "Yes"){
+                  draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+                }
               }
             }
         }
@@ -517,8 +527,10 @@ function lineChart(data){
               pid = filteredData[filteredDP].participant_id
               pidToOrderedNum = participantIDDict[pid]
               dayFromBase = filteredData[filteredDP].days_from_baseline
-              if (filteredData[filteredDP].self_au === "Yes"){
-                draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+              if (dayFromBase < 460) {
+                if (filteredData[filteredDP].self_au === "Yes"){
+                  draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+                }
               }
             }
         }
@@ -532,8 +544,10 @@ function lineChart(data){
               pid = filteredData[filteredDP].participant_id
               pidToOrderedNum = participantIDDict[pid]
               dayFromBase = filteredData[filteredDP].days_from_baseline
-              if (filteredData[filteredDP].self_du === "Yes"){
-                draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+              if (dayFromBase < 460) {
+                if (filteredData[filteredDP].self_du === "Yes"){
+                  draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+                }
               }
             }
 
@@ -551,8 +565,10 @@ function lineChart(data){
               dayFromBase = filteredData[filteredDP].days_from_baseline
               var s = svg3.append("rect")
               .attr("class", "rectangle");
-              if (filteredData[filteredDP].va_sex === "Yes"){
-                drawRect(s, dayFromBase, pidToOrderedNum)
+              if (dayFromBase < 460) {
+                if (filteredData[filteredDP].va_sex === "Yes"){
+                  drawRect(s, dayFromBase, pidToOrderedNum)
+                }
               }
             }
         }
@@ -606,9 +622,10 @@ function lineChart(data){
               pid = filteredData[filteredDP].participant_id
               pidToOrderedNum = participantIDDict[pid]
               dayFromBase = filteredData[filteredDP].days_from_baseline
-              console.log(dayFromBase)
-              if (filteredData[filteredDP].condom_used === "Yes") {
-                draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#69a3b2', 1) // change back to one
+              if (dayFromBase < 460) {
+                if (filteredData[filteredDP].condom_used === "Yes") {
+                  draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#69a3b2', 1) // change back to one
+                }
               }
             }
           }
@@ -625,8 +642,10 @@ function lineChart(data){
             pid = filteredData[filteredDP].participant_id
             pidToOrderedNum = participantIDDict[pid]
             dayFromBase = filteredData[filteredDP].days_from_baseline
-            if (filteredData[filteredDP].dating_violence === "Yes"){
-              draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#ffc0cb', 1) // change back to one
+            if (dayFromBase < 460) {
+              if (filteredData[filteredDP].dating_violence === "Yes"){
+                draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#ffc0cb', 1) // change back to one
+              }
             }
           }
         }
@@ -640,9 +659,11 @@ function lineChart(data){
             pid = filteredData[filteredDP].participant_id
             pidToOrderedNum = participantIDDict[pid]
             dayFromBase = filteredData[filteredDP].days_from_baseline
-            if (filteredData[filteredDP].forced_sex === "Yes"){
-              draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#40e0d0', 1)
-             } // change back to one
+            if (dayFromBase < 460) {
+              if (filteredData[filteredDP].forced_sex === "Yes"){
+                draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#40e0d0', 1)
+              } // change back to one
+            }
           }
         }
       }
@@ -655,8 +676,10 @@ function lineChart(data){
             pid = filteredData[filteredDP].participant_id
             pidToOrderedNum = participantIDDict[pid]
             dayFromBase = filteredData[filteredDP].days_from_baseline
-            if (filteredData[filteredDP].partner_au === "Yes"){
-              draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#a633ff', 1) // change back to one
+            if (dayFromBase < 460) {
+              if (filteredData[filteredDP].partner_au === "Yes"){
+                draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#a633ff', 1) // change back to one
+              }
             }
           }
         }
@@ -670,8 +693,10 @@ function lineChart(data){
             pid = filteredData[filteredDP].participant_id
             pidToOrderedNum = participantIDDict[pid]
             dayFromBase = filteredData[filteredDP].days_from_baseline
-            if (filteredData[filteredDP].partner_du === "Yes"){
-              draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+            if (dayFromBase < 460) {
+              if (filteredData[filteredDP].partner_du === "Yes"){
+                draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+              }
             }
           }
       }
@@ -685,8 +710,10 @@ function lineChart(data){
             pid = filteredData[filteredDP].participant_id
             pidToOrderedNum = participantIDDict[pid]
             dayFromBase = filteredData[filteredDP].days_from_baseline
-            if (filteredData[filteredDP].self_au === "Yes"){
-              draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+            if (dayFromBase < 460) {
+              if (filteredData[filteredDP].self_au === "Yes"){
+                draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+              }
             }
           }
       }
@@ -702,8 +729,10 @@ function lineChart(data){
             pid = filteredData[filteredDP].participant_id
             pidToOrderedNum = participantIDDict[pid]
             dayFromBase = filteredData[filteredDP].days_from_baseline
-            if (filteredData[filteredDP].self_du === "Yes"){
-              draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+            if (dayFromBase < 460) {
+              if (filteredData[filteredDP].self_du === "Yes"){
+                draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+              }
             }
           }
 
@@ -721,8 +750,10 @@ function lineChart(data){
             dayFromBase = filteredData[filteredDP].days_from_baseline
             var s = svg3.append("rect")
             .attr("class", "rectangle");
-            if (filteredData[filteredDP].va_sex === "Yes"){
-              drawRect(s, dayFromBase, pidToOrderedNum)
+            if (dayFromBase < 460) {
+              if (filteredData[filteredDP].va_sex === "Yes"){
+                drawRect(s, dayFromBase, pidToOrderedNum)
+              }
             }
           }
       }
