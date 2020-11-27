@@ -1,13 +1,13 @@
-// Immediately Invoked Function Expression to limit access to our 
-// variables and prevent 
+// Immediately Invoked Function Expression to limit access to our
+// variables and prevent
 ((() => {
 
   //console.log('Hello, world!');
 
 })());
-
 var parseDate = d3.timeParse('%Y-%d-%m %I:%M:%S');
 
+//load data and call function drawing visualization
 d3.csv('data/DateSMART_Data (1).csv', function(d) {
   return {
     participant_id: +d.PARTICIPANT_ID,
@@ -35,24 +35,28 @@ d3.csv('data/DateSMART_Data (1).csv', function(d) {
   };
 }).then(lineChart);
 
+// function to draw visualization
 function lineChart(data){
+  // declare DateSMART, control, and combined variables
   var dateSMART = data.filter(function(d){ return d.condition === 'DateSMART'})
   var control = data.filter(function(d) { return d.condition === 'Control'})
   var totalData = data.filter(function(d) { return d.participant_id})
-
+  // declare dispatchers
   let dispatch = d3.dispatch('changeColor');
   let dispatch2 = d3.dispatch('changeColor2');
 
 
 
-  
+  // calculate all participants
   var totalParticipants = data.filter(function(d) { return d.days_from_baseline === 0})
   //console.log(totalParticipants);
+  // make array of participants
   var par = new Array()
   for(var i = 0; i < totalParticipants.length; i++){
     par.push(totalParticipants[i].participant_id)
   }
   //console.log(par)
+  // make dictionary of participants and their IDs
   var participantIDDict = {}
   for(var i = 0; i < par.length; i++ ){
     participantIDDict[par[i]] = i
@@ -60,6 +64,7 @@ function lineChart(data){
   //console.log(participantIDDict)
 
   ///////////////////////// CONTROL //////////////////////////////
+  //check if participant selected yes for each response, if so plot for each timepoint
   var yesVASexControl = control.filter(function(d){ return d.va_sex === 'Yes'})
   var rollupControlVA = d3.rollup(yesVASexControl, v => d3.sum(v, d => d.va_sex === 'Yes'), d => d.timepoint_code)
   var VASexControl = new Map()
@@ -133,6 +138,7 @@ function lineChart(data){
   DVControl.set(4, rollupDVControl.get(4))
 
   //////////////////////////////////////////////////// DATE SMART ///////////////////////////////////////////////////////////
+  //check if participant selected yes for each response, if so plot for each timepoint
   var yesVASexDS = dateSMART.filter(function(d){ return d.va_sex === 'Yes'})
   var rollupVASexDS = d3.rollup(yesVASexDS, v => d3.sum(v, d => d.va_sex === 'Yes'), d => d.timepoint_code)
   var VASDS = new Map()
@@ -205,7 +211,7 @@ function lineChart(data){
   DVDS.set(3, rollupDVDS.get(3))
   DVDS.set(4, rollupDVDS.get(4))
 
-
+  // set margin, width, and height
   let margin = {
     top: 60,
     left: 50,
@@ -222,11 +228,10 @@ function lineChart(data){
 
   //create the scale for the yAxis
   var yScale = d3.scaleLinear()
-  /* .domain([0, d3.max([yesVASexCountControl, yesCondomUsedCountControl, yesForcedSexCountControl, yesSelfAUCountControl, yesSelfDUCountControl, yesSelfAUCountControl,
-  yesPartnerAUCountControl, yesPartnerDUCountControl, yesDVCountControl])]) */ //I think instead it should maybe use yes____, or maybe keep the axis the same?
-  .domain([0, 2500])
-  .range([height - margin.bottom - margin.top, 0]);
+  .domain([0, 2200])
+  .range([(height - margin.bottom - margin.top), 0]);
 
+  // declare svg
   let svg = d3.select('#vis-svg-1')
     .append('svg')
     .attr('preserveAspectRatio', 'xMidYMid meet') // this will scale your visualization according to the size of the page.
@@ -234,6 +239,7 @@ function lineChart(data){
     .style('background-color', '#ccc') // change the background color to white
     .attr('viewBox', [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom].join(' '))
 
+  // declare chart object
   var chartGroup = svg
     .append('g')
     .attr("class", "line-and-dots")
@@ -258,13 +264,14 @@ function lineChart(data){
    // title
    // http://www.d3noob.org/2013/01/adding-title-to-your-d3js-graph.html
    svg.append("text")
-        .attr("x", width - 150)             
+        .attr("x", width - 150)
         .attr("y", 30 )
-        .attr("text-anchor", "middle") 
-        .style("font-size", "10px") 
-        .style("text-decoration", "underline")  
+        .attr("text-anchor", "middle")
+        .style("font-size", "10px")
+        .style("text-decoration", "underline")
         .text("Control Group and Date SMART 'Yes' Responses");
 
+  // make list of variables
   var variablesList = ['Sex', 'Condom Used', 'Forced Sex', 'Self Drug Use', 'Self Alcohol Use', 'Partner Drug Use', 'Partner Alcohol Use', 'Dating Violence']
 
   // add the options to the button
@@ -282,8 +289,8 @@ function lineChart(data){
   chartGroup.append('g')
   .attr('class', 'y axis')
   .attr('transform', 'translate(0, 0)')
-  .call(yAxis); 
-  
+  .call(yAxis);
+
   // text label for the y axis
   // https://stackoverflow.com/questions/11189284/d3-axis-labeling
   svg.append("text")
@@ -293,33 +300,31 @@ function lineChart(data){
   .attr("y", 6)
   .attr("dy", ".20em")
   .attr("transform", "rotate(-90)")
-  .text("# of Yes Responses");  
+  .text("# of Yes Responses");
 
 
+  // make legend svg
   var svgLeg = d3.select(".vis-svg");
 
+  // declare type of legend and values
   var symbolScale = d3.scaleOrdinal()
   .domain(["- - - - - - - Control", "────── DateSMART"])
   .range([]);
 
-
+  // add legend to legend svg
   svgLeg.append("g")
   .attr("class", "legendSymbol")
   .attr("transform", "translate(20, 30)");
- 
 
+  // draw legend
   var legendPath = d3.legendSymbol()
   .scale(symbolScale)
   .labelWrap(1000)
   .title("Legend");
 
-
+  // make call to draw legend
   svgLeg.select(".legendSymbol")
   .call(legendPath);
-
- 
-  
-
 
   //console.log(data.filter(function(d){return d.va_sex[0]}))
 
@@ -327,12 +332,12 @@ function lineChart(data){
  var line = d3.line()
  .x(function(d){
    return xScale(d[0]);
-  })    
+  })
  .y(function(d){
    return yScale(d[1])
  })
 
-
+ // initialize variables
  var listOfSelectedControlPoints = [];
  var listOfSelectedDSPoints = [];
  var dict = {};
@@ -342,35 +347,23 @@ function lineChart(data){
  }
 
 
-
+ // draw control line
  var controlLine = chartGroup
       .append("path")
         .datum(data.filter(function(d){return d.va_sex==variablesList[0]}))
         .attr('d', line(VASexControl))
         .style("stroke-dasharray", ("3, 3"))
         .attr('class', 'dataLine');
-        
 
-
-        // draw plot circles
-/*    var dotC = chartGroup.append("g").selectAll("myCircles")
-        .data(VASexControl)
-        .enter()
-        .append("circle")
-          .attr("fill", "red")
-          .attr("stroke", "none")
-          .attr("cx", function(d) { return xScale(d[0]) })
-          .attr("cy", function(d) { return yScale(d[1]) })
-          .attr("r", 3)   */
-      
+  // draw datesmart line
   var dsLine = chartGroup
         .append("path")
         .datum(data.filter(function(d){return d.va_sex==variablesList[0]}))
         .attr('d', line(VASDS))
         .attr('class', 'dataLine');
-        
 
-    // draw plot circles
+
+    // draw plot circles for datesmart group
    var dotDS = chartGroup.append("g")
       .selectAll(".pointsDS")
       .data(VASDS)
@@ -381,9 +374,10 @@ function lineChart(data){
         .attr("stroke", "none")
         .attr("cx", function(d) { return xScale(d[0]) })
         .attr("cy", function(d) { return yScale(d[1]) })
-        .attr("r", 3)  
+        .attr("r", 3)
         .on("click", function() {dispatch2.call('changeColor2', this);})
- 
+
+  // draw plot circles for control group
    var dotControl = chartGroup
       .selectAll('.pointsControl')
       .data(VASexControl)
@@ -396,12 +390,11 @@ function lineChart(data){
         .style("fill", "#69b3a2")
         .on("click", function() {dispatch.call('changeColor', this);})
       ;
-
+      // declare initial variable selection
       dict['Sex'] = true;
 
-
-
       //https://stackoverflow.com/questions/45464364/changing-css-fill-for-svg-with-js
+      // code to update fill of circles to black when selected and back when deselected
       dispatch.on('changeColor', function() {
         var timepointClicked = (this.cx.baseVal.value) / 84
         if (this.style.fill == "black") {
@@ -424,15 +417,13 @@ function lineChart(data){
           }
         }
 
-
-
         svg3.selectAll(".point").remove();
         svg3.selectAll(".rectangle").remove();
 
         if (variableSelected === "Condom Used"){
-            //get the timepoints selected  
+            //get the timepoints selected
             for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
-              var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})           
+              var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})
               //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
               //for each of the filtered data points  -- draw specific variable shape
               for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -448,11 +439,11 @@ function lineChart(data){
             }
         }
 
-        
+
         if (variableSelected === "Dating Violence"){
-          //get the timepoints selected  
+          //get the timepoints selected
           for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
-            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})
             //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
             //for each of the filtered data points  -- draw specific variable shape
             for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -469,7 +460,7 @@ function lineChart(data){
         }
         if (variableSelected === "Forced Sex"){
           for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
-            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})
             //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
             //for each of the filtered data points  -- draw specific variable shape
             for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -486,7 +477,7 @@ function lineChart(data){
         }
         if (variableSelected === "Partner Alcohol Use"){
           for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
-            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})
             //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
             //for each of the filtered data points  -- draw specific variable shape
             for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -495,7 +486,7 @@ function lineChart(data){
               dayFromBase = filteredData[filteredDP].days_from_baseline
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].partner_au === "Yes"){
-                  draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#a633ff', 1) 
+                  draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#a633ff', 1)
                 }// change back to one
               }
             }
@@ -503,7 +494,7 @@ function lineChart(data){
         }
         if (variableSelected === "Partner Drug Use"){
           for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
-            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})
             //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
             //for each of the filtered data points  -- draw specific variable shape
             for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -520,7 +511,7 @@ function lineChart(data){
       }
         if (variableSelected === "Self Alcohol Use"){
           for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
-            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})
             //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
             //for each of the filtered data points  -- draw specific variable shape
             for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -537,7 +528,7 @@ function lineChart(data){
       }
         if (variableSelected === "Self Drug Use"){
           for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
-            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})            
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})
             //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
             //for each of the filtered data points  -- draw specific variable shape
             for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -556,7 +547,7 @@ function lineChart(data){
 
         if (variableSelected === 'Sex') {
           for(var tp = 0; tp < listOfSelectedControlPoints.length; tp++){
-            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})              
+            var filteredData = control.filter(function(d) { return d.timepoint_code === listOfSelectedControlPoints[tp]})
             //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
             //for each of the filtered data points  -- draw specific variable shape
             for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -573,15 +564,9 @@ function lineChart(data){
             }
         }
       }
-      
-
-
-
-        
-        
-
       });
 
+      // draw shapes on temporal graph based on which circles are selected
       dispatch2.on('changeColor2', function() {
         var timepointClicked = (this.cx.baseVal.value) / 84
         if (this.style.fill == "black") {
@@ -595,9 +580,9 @@ function lineChart(data){
         else {
           this.style.fill = "black"
           listOfSelectedDSPoints.push(timepointClicked)
-        } 
+        }
 
-        
+
         var variableSelected;
         for (var key in dict) {
           if(dict[key] == true) {
@@ -612,12 +597,12 @@ function lineChart(data){
 
 
         if (variableSelected === "Condom Used"){
-          //get the timepoints selected  
+          //get the timepoints selected
           for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-            var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
+            var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})
             //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
             //for each of the filtered data points  -- draw specific variable shape
-            
+
             for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
               pid = filteredData[filteredDP].participant_id
               pidToOrderedNum = participantIDDict[pid]
@@ -631,11 +616,11 @@ function lineChart(data){
           }
       }
 
-      
+
       if (variableSelected === "Dating Violence"){
-        //get the timepoints selected  
+        //get the timepoints selected
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -652,7 +637,7 @@ function lineChart(data){
       }
       if (variableSelected === "Forced Sex"){
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -669,7 +654,7 @@ function lineChart(data){
       }
       if (variableSelected === "Partner Alcohol Use"){
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -686,7 +671,7 @@ function lineChart(data){
       }
       if (variableSelected === "Partner Drug Use"){
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -703,7 +688,7 @@ function lineChart(data){
     }
       if (variableSelected === "Self Alcohol Use"){
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -721,8 +706,8 @@ function lineChart(data){
       if (variableSelected === "Self Drug Use"){
         console.log(listOfSelectedDSPoints)
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})         
-          console.log(filteredData)  
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})
+          console.log(filteredData)
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -741,7 +726,7 @@ function lineChart(data){
 
       if (variableSelected === 'Sex') {
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
-          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})              
+          var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})
           //filter data by (control vs datesmart) and (listOfSelectedControlPoints[tp])
           //for each of the filtered data points  -- draw specific variable shape
           for(var filteredDP = 0; filteredDP < filteredData.length; filteredDP++){
@@ -758,75 +743,26 @@ function lineChart(data){
           }
       }
     }
-    
-
-
-
-
-
-
-
-
-
-
       });
 
 
 
-      
+
       //console.log(dict)
- 
+
       var rollupControlVAs = d3.rollup(data, v => d3.sum(v, d => d.va_sex === 'Yes'), d => d.timepoint_code, d => d.condition)
       var l = ["Control", "DateSMART"]
 
-    /*  var dotControlTest = chartGroup
-      .selectAll('circle')
-      .data(rollupControlVAs)
-      .enter()
-      .append('circle')
-        .attr("cx", function(d) { for (item in l) { return xScale(d[0])}})
-        .attr("cy", function(d) { for (item in l) {
-          return yScale(d[1].get(l[item])); }})
-          //console.log(d[1].get(l[item]))}})
-        
-        .attr("r", 3)
-        .style("fill", "#69b3a2")
-        .on("click", function(){dispatch.call('changeColor', this);})
-      ;  */
-
-
-
-
-      //console.log(rollupControlVAs.get(0))
-
-
-
-/* 
-
-  var dot = chartGroup
-        .selectAll('circle')
-        .data(VASDS)
-        .enter()
-        .append('circle')
-          .attr("cx", function(d) { return xScale(d[0]) })
-          .attr("cy", function(d) { return yScale(d[1]) })
-          .attr("r", 3)
-          .style("fill", "#695859"); */
-
-
-
-
-
-
- // line filter 
+ // line filter
  // https://www.d3-graph-gallery.com/graph/line_filter.html
+ // update selections
  function update(selectedGroup) {
 
   if (selectedGroup == 'Sex') {
     var dataFilter = data.filter(function(d){return d.va_sex==variablesList[0]})
 
     // Give these new data to update line
-    controlLine 
+    controlLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
@@ -834,10 +770,8 @@ function lineChart(data){
     )
     .attr('class', 'dataLine');
 
-    
-  
 
-    dsLine 
+    dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
@@ -858,7 +792,7 @@ function lineChart(data){
         .duration(1000)
           .attr("cx", function(d) { return xScale(d[0])})
           .attr("cy", function(d) { return yScale(d[1])});
-          
+
 
     for (var i in variablesList) {
       dict[variablesList[i]] = false;
@@ -873,7 +807,7 @@ function lineChart(data){
     var dataFilter = data.filter(function(d){return d.condom_used==variablesList[1]})
 
     // Give these new data to update line
-    controlLine 
+    controlLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
@@ -882,7 +816,7 @@ function lineChart(data){
 
 
 
-    dsLine 
+    dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
@@ -903,7 +837,7 @@ function lineChart(data){
           .attr("cx", function(d) { return xScale(d[0])})
           .attr("cy", function(d) { return yScale(d[1])});
 
-      
+
     for (var i in variablesList) {
       dict[variablesList[i]] = false;
     }
@@ -916,14 +850,14 @@ function lineChart(data){
     var dataFilter = data.filter(function(d){return d.forced_sex==variablesList[2]})
 
     // Give these new data to update line
-    controlLine 
+    controlLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(FSControl)
     )
 
-    dsLine 
+    dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
@@ -944,7 +878,7 @@ function lineChart(data){
           .attr("cx", function(d) { return xScale(d[0])})
           .attr("cy", function(d) { return yScale(d[1])});
 
-          
+
     for (var i in variablesList) {
       dict[variablesList[i]] = false;
     }
@@ -957,14 +891,14 @@ function lineChart(data){
     var dataFilter = data.filter(function(d){return d.self_du==variablesList[3]})
 
     // Give these new data to update line
-    controlLine 
+    controlLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(SDUControl)
     )
 
-    dsLine 
+    dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
@@ -986,7 +920,7 @@ function lineChart(data){
           .attr("cx", function(d) { return xScale(d[0])})
           .attr("cy", function(d) { return yScale(d[1])});
 
-    
+
     for (var i in variablesList) {
       dict[variablesList[i]] = false;
     }
@@ -999,14 +933,14 @@ function lineChart(data){
     var dataFilter = data.filter(function(d){return d.self_au==variablesList[3]})
 
     // Give these new data to update line
-    controlLine 
+    controlLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(SAUControl)
     )
 
-    dsLine 
+    dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
@@ -1027,7 +961,7 @@ function lineChart(data){
           .attr("cx", function(d) { return xScale(d[0])})
           .attr("cy", function(d) { return yScale(d[1])});
 
-    
+
     for (var i in variablesList) {
       dict[variablesList[i]] = false;
     }
@@ -1041,14 +975,14 @@ function lineChart(data){
     var dataFilter = data.filter(function(d){return d.partner_du==variablesList[4]})
 
     // Give these new data to update line
-    controlLine 
+    controlLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(PDUControl)
     )
 
-    dsLine 
+    dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
@@ -1069,7 +1003,7 @@ function lineChart(data){
           .attr("cx", function(d) { return xScale(d[0])})
           .attr("cy", function(d) { return yScale(d[1])});
 
-    
+
     for (var i in variablesList) {
       dict[variablesList[i]] = false;
     }
@@ -1083,14 +1017,14 @@ function lineChart(data){
     var dataFilter = data.filter(function(d){return d.partner_au==variablesList[5]})
 
     // Give these new data to update line
-    controlLine 
+    controlLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(PAUControl)
     )
 
-    dsLine 
+    dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
@@ -1110,7 +1044,7 @@ function lineChart(data){
         .duration(1000)
           .attr("cx", function(d) { return xScale(d[0])})
           .attr("cy", function(d) { return yScale(d[1])});
-          
+
     for (var i in variablesList) {
       dict[variablesList[i]] = false;
     }
@@ -1124,14 +1058,14 @@ function lineChart(data){
     var dataFilter = data.filter(function(d){return d.dating_violence==variablesList[6]})
 
     // Give these new data to update line
-    controlLine 
+    controlLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(DVControl)
     )
 
-    dsLine 
+    dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
@@ -1153,7 +1087,7 @@ function lineChart(data){
         .duration(1000)
           .attr("cx", function(d) { return xScale(d[0])})
           .attr("cy", function(d) { return yScale(d[1])});
-    
+
     for (var i in variablesList) {
       dict[variablesList[i]] = false;
     }
@@ -1162,7 +1096,7 @@ function lineChart(data){
 
     console.log(dict)
   }
- 
+
 }
 
 // When the button is changed, run the updateChart function
@@ -1174,49 +1108,20 @@ d3.select("#selectButton").on("change", function(d) {
 })
 
 // VISUALIZATION # 3
+// declare svg
 let svg3 = d3.select('#vis-svg-3')
     .append('svg')
     .attr('preserveAspectRatio', 'xMidYMid meet') // this will scale your visualization according to the size of the page.
     .attr('width', '100%') // this is now required by Chrome to ensure the SVG shows up at all
     .style('background-color', '#ccc') // change the background color to white
     .attr('viewBox', [-30, 600, width*4 + margin.left + margin.right, height + margin.top + margin.bottom].join(' '))
-    
 
-    var triangleU = d3.symbol().type(d3.symbolTriangle)(),
-circle = d3.symbol().type(d3.symbolCircle)(),
-cross = d3.symbol().type(d3.symbolCross)(),
-diamond = d3.symbol().type(d3.symbolDiamond)(),
-star = d3.symbol().type(d3.symbolStar)();
-
-//example output of d3.svg.symbol().type('circle')();
-//"M0,4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,
-//-4.51351666838205A4.51351666838205,4.51351666838205 0 1,1 0,4.51351666838205Z"
-
-//https://d3-legend.susielu.com/#color-examples
-//generates legend
-/*var symbolScale =  d3.scaleOrdinal()
-.domain(['a longer label','b','c', 'd', 'e'])
-.range([ triangleU, circle, cross, diamond, star] );
-svg3.append("g")
-.attr("class", "legendSymbol")
-.attr("transform", "translate(0, 0)");
-
-var legendPath = d3.legendSymbol()
-.scale(symbolScale)
-.orient("horizontal")
-.labelFormat(".03f")
-.labelWrap(30)
-.title("Symbol Legend Title")
-//.on("cellclick", function(d){alert("clicked " + d);});
-
-svg3.select(".legendSymbol")
-.call(legendPath);*/
-
-
+    //declare chart group
     var chartGroup = svg3
     .append('g')
     .attr('transform','translate(' + margin.left +',' + margin.top + ')');
 
+    // declare width and heights for viewbox and legend correction factors
     var w = width*4.1 + margin.left + margin.right - 100;
     var h = height*.75 + margin.top + margin.bottom + 300;
     var legMove = 70;
@@ -1240,8 +1145,6 @@ svg3.select(".legendSymbol")
     .domain([0, totalParticipants.length])
     //outputs
     .range([0, h + legMove]);
-
-
 
     //PREPARE AXES
     var xAxisBottom = d3.axisBottom(xScale3).ticks(92);
@@ -1269,64 +1172,45 @@ svg3.select(".legendSymbol")
     .attr("transform", "translate(" + w + ",0)")
     .call(yAxisRight);
 
-
-   /* var ygridlines = d3.axisTop()
-                 .tickFormat("")
-                 .tickSize(-h)
-                 .ticks(10)
-                 .scale(xScale);*/
-
     var xgridlines = d3.axisLeft()
                  .tickFormat("")
                  .tickSize(-w)
                  .ticks(20)
                  .scale(yScale3);
 
-    /*svg3.append("g")
-    .attr("class", "main-grid")
-    .call(ygridlines);*/
-    
     svg3.append("g")
     .attr("class", "main-grid")
     .call(xgridlines);
 
-
-    var ordinal = d3.scaleOrdinal()
+  // declare object with values for legend
+  var ordinal = d3.scaleOrdinal()
     .domain(["Vaginal sex", "Condom used", "Forced sex", "Dating violence", "Partner alcohol use", "Partner drug use", "Self alcohol use", "Self drug use", " "])
     .range(["#f4f1f0", "#000000", "#69a3b2", "#40e0d0", "#ffc0cb", "#a633ff", "#ff338d", "#33ff8c", "#9495e2"]);
-  
+  // declare legend svg
   var svgLeg = d3.select("#vis-svg-3");
-  
-  
+
+  // draw legend
   svgLeg.append("g")
     .style("font", "3px arial")
     .attr("class", "legendOrdinal")
     .attr("transform", "translate(10, 5)");
-  
-   
-  
+
+  // make legend object
   var legendOrdinal = d3.legendColor()
-    //d3 symbol creates a path-string, for example
-    //"M0,-8.059274488676564L9.306048591020996,
-    //8.059274488676564 -9.306048591020996,8.059274488676564Z"
     .shape("path", d3.symbol().type(d3.symbolCircle).size(2)())
     .shapePadding(1)
     .labelOffset(2)
     .labelAlign("start")
     .title("Legend:")
     .scale(ordinal);
-  
+
+  // call drawing of legend
   svgLeg.select(".legendOrdinal")
     .call(legendOrdinal);
 
-
-
-
-
-    
     //console.log(totalData)
     //This places shapes on the svg according to particular variable categories by participantID (Y)
-    // and day from baseline(X). 
+    // and day from baseline(X).
     for(var i = 0; i < totalData.length; i++){
       //console.log(totalData[i])
       //gets participant ID
@@ -1367,37 +1251,6 @@ svg3.select(".legendSymbol")
       }
     }
 
-    /**
-     * For each data point
-     *  1) get variable value (that has to do with shape)
-     *  2) get participant id
-     *      a) match participant id to key in dict
-     *      b) yScale3(key -.5)
-     *  3) get day from baseline
-     *      a) xScale(day -.5)
-     *  4) place shape there 
-     * 
-     */
-
-
-
-    
-/*
-     for(objectNum = 0; objectNum < arraytotal; objectNum++ ){
-       pid = array[objectNum].getParticipantID
-       pidToOrderedNum = dict.get(pid)
-       dayFromBase = array[objectNum].getDaysFromBase
-       placeAllShapes(pid, dayFromBase, objectNum)
-     }
-
-
-     function placeAllShapes(x, y, obj){
-      for(i = 0; i < num; i++ ){
-        
-      }
-     }*/
-     
-
        // draws from these shape options: d3.symbolCirlce, d3.symbolCross,
     //   d3.symbolDiamond, d3.symbolSquare, d3.symbolStar, d3.symbolTriangle,
     //   d3.symbolWye
@@ -1414,25 +1267,9 @@ svg3.select(".legendSymbol")
       return shape;
     }
 
-
- 
     //select shape
     var s = svg3.append("rect")
     .attr("class", "rectangle");
-
-
-    // an few example calls
-    /*var tri = draw(d3.symbolTriangle,25, 25,'#69a3b2', 1);
-    var wye = draw(d3.symbolWye, 1, 3,'#ffc0cb', 1);
-    var star = draw(d3.symbolStar, 1, 4,'#40e0d0', 1);
-    var cross = draw(d3.symbolCross, 1, 5, '#40e0d0', 1);
-    var diamond = draw(d3.symbolDiamond, 1, 6, '#40e0d0', 1);
-    var circle = draw(d3.symbolCircle, 1, 7, '#40e0d0', 1);
-    var square = draw(d3.symbolSquare, 1,8, '#40e0d0', 1);
-    var rect = svg3.append("rect")
-    .attr("class", "rectangle");
-    drawRect(rect, 1, 9);*/
-     
 
     function drawRect(shape, xPos, yPos) {
       var yScaleVal = .8
@@ -1444,118 +1281,6 @@ svg3.select(".legendSymbol")
       .attr("y",function(d){
          return yScale3(yPos - (yScaleVal/2));})
       .attr("x",function(d){
-         return xScale3(xPos - (xScaleVal/2));});  
+         return xScale3(xPos - (xScaleVal/2));});
     }
-
-             
-
-       
-     
-
-   /* svg3.append("g")
-  .attr("class", "legendQuant")
-  .attr("transform", "translate(20,20)");
-
-var legend = d3.legendColor()
-  .labelFormat(d3.format(".2f"))
-  .useClass(true)
-  .title("A really really really really")
-  .titleWidth(10)
-  .scale(yScale3);
-
-svg3.select(".legendQuant")
-  .call(legend);*/
-    
-    //placeShape(s2, 1, 2);
-/* 
-    //create the scale for the xAxis
-  var xScale3 = d3.scaleBand() // ordinal??
-  .domain(['0', '1', '2', '3', '4'])
-  .range([0, width]);
-
-  
-  var par = new Array()
-  for(var i = 0; i < totalParticipants.length; i++){
-    par.push(totalParticipants[i].participant_id)
-  }
-  console.log(par)
-
-  //create the scale for the yAxis
-  var yScale3 = d3.scaleBand()
-  /* .domain([0, d3.max([yesVASexCountControl, yesCondomUsedCountControl, yesForcedSexCountControl, yesSelfAUCountControl, yesSelfDUCountControl, yesSelfAUCountControl,
-  yesPartnerAUCountControl, yesPartnerDUCountControl, yesDVCountControl])]) */ //I think instead it should maybe use yes____, or maybe keep the axis the same?
-  /*.domain(par)
-  .range([height - margin.bottom - margin.top, 0]);
-    
-
-  //create the xAxis
- var xAxis = d3.axisTop(xScale3)
-  .tickSize(height -80);
-  chartGroup.append('g')
-  .attr('class', 'x axis')
-  .attr('transform', 'translate(-42, ' + (height - margin.bottom - margin.top) + ')')
-  .call(xAxis);
-
-   // text label for the x axis
-   // https://stackoverflow.com/questions/11189284/d3-axis-labeling
-   svg3.append("text")
-   .attr("class", "xlabel")
-   .attr("text-anchor", "end")
-   .attr("x", width - 150)
-   .attr("y", height - 6)
-   .text("Days From Each Timepoint");
-
-   // title
-   // http://www.d3noob.org/2013/01/adding-title-to-your-d3js-graph.html
-   svg3.append("text")
-        .attr("x", width - 150)             
-        .attr("y", 30 )
-        .attr("text-anchor", "middle")  
-        .style("font-size", "16px") 
-        .style("text-decoration", "underline")  
-        .text("Date SMART Group 'Yes' Responses");
-
-  //create the yAxis
-  var yAxis = d3.axisLeft(yScale3)
-  .tickSize(-width + 40);
-  chartGroup.append('g')
-  .attr('class', 'y axis')
-  .attr('transform', 'translate(0, 0)')
-  .call(yAxis); 
-  
-  // text label for the y axis
-  // https://stackoverflow.com/questions/11189284/d3-axis-labeling
-  svg3.append("text")
-  .attr("class", "ylabel")
-  .attr("text-anchor", "end")
-  .attr("x", -200)
-  .attr("y", 6)
-  .attr("dy", ".20em")
-  .attr("transform", "rotate(-90)")
-  .text("Participants");  
-  
-/*
-
-  //http://www.d3noob.org/2013/01/adding-grid-lines-to-d3js-graph.html
-  svg3.append("g")         
-        .attr("class", "grid")
-        .attr("transform", "translate(0," + height + ")")
-        .call(make_x_axis()
-            .tickSize(-height, 0, 0)
-            .tickFormat("")
-        );
-    
-
-    svg3.append("g")         
-        .attr("class", "grid")
-        .call(make_y_axis()
-            .tickSize(-width, 0, 0)
-            .tickFormat("")
-        );*/
-
-
-
-
 }
-  
-  
