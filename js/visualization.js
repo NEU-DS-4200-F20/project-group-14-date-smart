@@ -2,7 +2,6 @@
 // variables and prevent
 ((() => {
 
-  //console.log('Hello, world!');
 
 })());
 var parseDate = d3.timeParse('%Y-%d-%m %I:%M:%S');
@@ -37,6 +36,7 @@ d3.csv('data/DateSMART_Data (1).csv', function(d) {
 
 // function to draw visualization
 function lineChart(data){
+
   // declare DateSMART, control, and combined variables
   var dateSMART = data.filter(function(d){ return d.condition === 'DateSMART'})
   var control = data.filter(function(d) { return d.condition === 'Control'})
@@ -49,19 +49,16 @@ function lineChart(data){
 
   // calculate all participants
   var totalParticipants = data.filter(function(d) { return d.days_from_baseline === 0})
-  //console.log(totalParticipants);
   // make array of participants
   var par = new Array()
   for(var i = 0; i < totalParticipants.length; i++){
     par.push(totalParticipants[i].participant_id)
   }
-  //console.log(par)
   // make dictionary of participants and their IDs
   var participantIDDict = {}
   for(var i = 0; i < par.length; i++ ){
     participantIDDict[par[i]] = i
   }
-  //console.log(participantIDDict)
 
   ///////////////////////// CONTROL //////////////////////////////
   //check if participant selected yes for each response, if so plot for each timepoint
@@ -223,7 +220,7 @@ function lineChart(data){
 
   //create the scale for the xAxis
   var xScale = d3.scaleBand() // ordinal??
-  .domain(['0', '1', '2', '3', '4'])
+  .domain([0, 1, 2, 3, 4])
   .range([0, width]);
 
   //create the scale for the yAxis
@@ -287,7 +284,7 @@ function lineChart(data){
   //create the yAxis
   var yAxis = d3.axisLeft(yScale);
   chartGroup.append('g')
-  .attr('class', 'y axis')
+  .attr('class', 'y-axis')
   .attr('transform', 'translate(0, 0)')
   .call(yAxis);
 
@@ -325,8 +322,6 @@ function lineChart(data){
   // make call to draw legend
   svgLeg.select(".legendSymbol")
   .call(legendPath);
-
-  //console.log(data.filter(function(d){return d.va_sex[0]}))
 
  //create the line
  var line = d3.line()
@@ -614,6 +609,11 @@ function lineChart(data){
               }
             }
           }
+
+
+
+
+
       }
 
 
@@ -704,7 +704,6 @@ function lineChart(data){
       }
     }
       if (variableSelected === "Self Drug Use"){
-        console.log(listOfSelectedDSPoints)
         for(var tp = 0; tp < listOfSelectedDSPoints.length; tp++){
           var filteredData = dateSMART.filter(function(d) { return d.timepoint_code === listOfSelectedDSPoints[tp]})
           console.log(filteredData)
@@ -745,11 +744,6 @@ function lineChart(data){
     }
       });
 
-
-
-
-      //console.log(dict)
-
       var rollupControlVAs = d3.rollup(data, v => d3.sum(v, d => d.va_sex === 'Yes'), d => d.timepoint_code, d => d.condition)
       var l = ["Control", "DateSMART"]
 
@@ -760,6 +754,10 @@ function lineChart(data){
 
   if (selectedGroup == 'Sex') {
     var dataFilter = data.filter(function(d){return d.va_sex==variablesList[0]})
+
+    yScale.domain([0, 1000])  // change scale to 0, to between 10 and 100
+    d3.selectAll(".y-axis").transition()
+    .call(yAxis)
 
     // Give these new data to update line
     controlLine
@@ -794,6 +792,7 @@ function lineChart(data){
           .attr("cy", function(d) { return yScale(d[1])});
 
 
+
     for (var i in variablesList) {
       dict[variablesList[i]] = false;
     }
@@ -805,6 +804,11 @@ function lineChart(data){
 
   if (selectedGroup == 'Condom Used') {
     var dataFilter = data.filter(function(d){return d.condom_used==variablesList[1]})
+
+    //d3.select(".y-axis").selectAll("*").remove();
+    yScale.domain([0,400])  // change scale to 0, to between 10 and 100
+    d3.selectAll(".y-axis").transition()
+    .call(yAxis)
 
     // Give these new data to update line
     controlLine
@@ -837,7 +841,6 @@ function lineChart(data){
           .attr("cx", function(d) { return xScale(d[0])})
           .attr("cy", function(d) { return yScale(d[1])});
 
-
     for (var i in variablesList) {
       dict[variablesList[i]] = false;
     }
@@ -848,6 +851,10 @@ function lineChart(data){
 
   if (selectedGroup == 'Forced Sex') {
     var dataFilter = data.filter(function(d){return d.forced_sex==variablesList[2]})
+
+    yScale.domain([0,65])  // change scale to 0, to between 10 and 100
+    d3.selectAll(".y-axis").transition()
+    .call(yAxis)
 
     // Give these new data to update line
     controlLine
@@ -889,6 +896,10 @@ function lineChart(data){
 
   if (selectedGroup == 'Self Drug Use') {
     var dataFilter = data.filter(function(d){return d.self_du==variablesList[3]})
+
+    yScale.domain([0,2200])  // change scale to 0, to between 10 and 100
+    d3.selectAll(".y-axis").transition()
+    .call(yAxis)
 
     // Give these new data to update line
     controlLine
@@ -932,6 +943,10 @@ function lineChart(data){
   if (selectedGroup == 'Self Alcohol Use') {
     var dataFilter = data.filter(function(d){return d.self_au==variablesList[3]})
 
+    yScale.domain([0,300])  // change scale to 0, to between 10 and 100
+    d3.selectAll(".y-axis").transition()
+    .call(yAxis)
+
     // Give these new data to update line
     controlLine
     .datum(dataFilter)
@@ -967,12 +982,14 @@ function lineChart(data){
     }
 
     dict['Self Alcohol Use'] = true;
-
-    console.log(dict)
   }
 
   if (selectedGroup == 'Partner Drug Use') {
     var dataFilter = data.filter(function(d){return d.partner_du==variablesList[4]})
+
+    yScale.domain([0,2000])  // change scale to 0, to between 10 and 100
+    d3.selectAll(".y-axis").transition()
+    .call(yAxis)
 
     // Give these new data to update line
     controlLine
@@ -1009,12 +1026,14 @@ function lineChart(data){
     }
 
     dict['Partner Drug Use'] = true;
-
-    console.log(dict)
   }
 
   if (selectedGroup == 'Partner Alcohol Use') {
     var dataFilter = data.filter(function(d){return d.partner_au==variablesList[5]})
+
+    yScale.domain([0,400])  // change scale to 0, to between 10 and 100
+    d3.selectAll(".y-axis").transition()
+    .call(yAxis)
 
     // Give these new data to update line
     controlLine
@@ -1050,12 +1069,14 @@ function lineChart(data){
     }
 
     dict['Partner Alcohol Use'] = true;
-
-    console.log(dict)
   }
 
   if (selectedGroup == 'Dating Violence') {
     var dataFilter = data.filter(function(d){return d.dating_violence==variablesList[6]})
+
+    yScale.domain([0,200])  // change scale to 0, to between 10 and 100
+    d3.selectAll(".y-axis").transition()
+    .call(yAxis)
 
     // Give these new data to update line
     controlLine
@@ -1093,8 +1114,6 @@ function lineChart(data){
     }
 
     dict['Dating Violence'] = true;
-
-    console.log(dict)
   }
 
 }
@@ -1207,19 +1226,15 @@ let svg3 = d3.select('#vis-svg-3')
   // call drawing of legend
   svgLeg.select(".legendOrdinal")
     .call(legendOrdinal);
-
-    //console.log(totalData)
     //This places shapes on the svg according to particular variable categories by participantID (Y)
     // and day from baseline(X).
     for(var i = 0; i < totalData.length; i++){
-      //console.log(totalData[i])
       //gets participant ID
       pid = totalData[i].participant_id
       //translates participant ID to numbered ID from 0 to length -1 of participant IDs
       pidToOrderedNum = participantIDDict[pid]
       //gets days from baseline
       dayFromBase = totalData[i].days_from_baseline
-      //console.log(dayFromBase)
       if (dayFromBase < 460) {
         //placeAllShapes(pid, dayFromBase, objectNum)
         if (totalData[i].condom_used === "Yes"){
