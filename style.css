@@ -29,7 +29,7 @@ h1, h2, h3 {
 	width: 500px;
 	display: block;
     margin-left: auto;
-    margin-right: auto 
+    margin-right: auto
 }
 
 .vis-svg-2 {
@@ -37,15 +37,20 @@ h1, h2, h3 {
 }
 
 .vis-3-holder {
-	height: 3000px;
+	height: 800px;
 	width: 100%;
 	overflow-y:hidden;
-	overflow-x:scroll;
+	overflow-x:hidden;
+}
+
+#vis-svg-3 {
+	font-weight: lighter;
+	font-size: 10px;
 }
 
 
 
-/* Fork on GitHub ribbon via https://codepo8.github.io/css-fork-on-github-ribbon/# */  
+/* Fork on GitHub ribbon via https://codepo8.github.io/css-fork-on-github-ribbon/# */
 #forkongithub a{
 	background:#00F;
 	color:#fff;
@@ -114,7 +119,7 @@ line{
 	stroke-width: 1px;
 	fill: none;
   }
-  
+
   .dataLine1{
 	stroke: orange;
 	stroke-width: 1px;
@@ -162,5 +167,5 @@ line{
   }
 
   .data-circle {
-	fill: #3C92BA;     
+	fill: #3C92BA;
 }

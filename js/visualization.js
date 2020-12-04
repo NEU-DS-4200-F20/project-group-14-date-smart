@@ -258,18 +258,9 @@ function lineChart(data){
    .attr("y", height - 6)
    .text("Timepoint");
 
-   // title
-   // http://www.d3noob.org/2013/01/adding-title-to-your-d3js-graph.html
-   svg.append("text")
-        .attr("x", width - 150)
-        .attr("y", 30 )
-        .attr("text-anchor", "middle")
-        .style("font-size", "10px")
-        .style("text-decoration", "underline")
-        .text("Control Group and Date SMART 'Yes' Responses");
 
   // make list of variables
-  var variablesList = ['Sex', 'Condom Used', 'Forced Sex', 'Self Drug Use', 'Self Alcohol Use', 'Partner Drug Use', 'Partner Alcohol Use', 'Dating Violence']
+  var variablesList = ['Vaginal Sex', 'Condom Used', 'Forced Sex', 'Self Drug Use', 'Self Alcohol Use', 'Partner Drug Use', 'Partner Alcohol Use', 'Dating Violence']
 
   // add the options to the button
   d3.select("#selectButton")
@@ -427,7 +418,7 @@ function lineChart(data){
                 dayFromBase = filteredData[filteredDP].days_from_baseline
                 if (dayFromBase < 460) {
                   if (filteredData[filteredDP].condom_used === "Yes"){
-                    draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#69a3b2', 1) // change back to one
+                    draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#377eb8', 1) // change back to one
                   }
                 }
               }
@@ -447,7 +438,7 @@ function lineChart(data){
               dayFromBase = filteredData[filteredDP].days_from_baseline
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].dating_violence === "Yes"){
-                  draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#ffc0cb', 1)
+                  draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#984ea3', 1)
                 } // change back to one
               }
             }
@@ -464,7 +455,7 @@ function lineChart(data){
               dayFromBase = filteredData[filteredDP].days_from_baseline
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].forced_sex === "Yes"){
-                  draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#40e0d0', 1) // change back to one
+                  draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#e6e600', 1) // change back to one
                 }
               }
             }
@@ -481,7 +472,7 @@ function lineChart(data){
               dayFromBase = filteredData[filteredDP].days_from_baseline
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].partner_au === "Yes"){
-                  draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#a633ff', 1)
+                  draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#ff7f00', 1)
                 }// change back to one
               }
             }
@@ -498,7 +489,7 @@ function lineChart(data){
               dayFromBase = filteredData[filteredDP].days_from_baseline
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].partner_du === "Yes"){
-                  draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+                  draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#4daf4a', 1);
                 }
               }
             }
@@ -515,7 +506,7 @@ function lineChart(data){
               dayFromBase = filteredData[filteredDP].days_from_baseline
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].self_au === "Yes"){
-                  draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+                  draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#a65628', 1);
                 }
               }
             }
@@ -532,7 +523,7 @@ function lineChart(data){
               dayFromBase = filteredData[filteredDP].days_from_baseline
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].self_du === "Yes"){
-                  draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+                  draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#f781bf', 1);
                 }
               }
             }
@@ -604,7 +595,7 @@ function lineChart(data){
               dayFromBase = filteredData[filteredDP].days_from_baseline
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].condom_used === "Yes") {
-                  draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#69a3b2', 1) // change back to one
+                  draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#377eb8', 1) // change back to one
                 }
               }
             }
@@ -629,7 +620,7 @@ function lineChart(data){
             dayFromBase = filteredData[filteredDP].days_from_baseline
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].dating_violence === "Yes"){
-                draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#ffc0cb', 1) // change back to one
+                draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#984ea3', 1) // change back to one
               }
             }
           }
@@ -646,7 +637,7 @@ function lineChart(data){
             dayFromBase = filteredData[filteredDP].days_from_baseline
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].forced_sex === "Yes"){
-                draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#40e0d0', 1)
+                draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#e6e600', 1)
               } // change back to one
             }
           }
@@ -663,7 +654,7 @@ function lineChart(data){
             dayFromBase = filteredData[filteredDP].days_from_baseline
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].partner_au === "Yes"){
-                draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#a633ff', 1) // change back to one
+                draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#ff7f00', 1) // change back to one
               }
             }
           }
@@ -680,7 +671,7 @@ function lineChart(data){
             dayFromBase = filteredData[filteredDP].days_from_baseline
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].partner_du === "Yes"){
-                draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+                draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#4daf4a', 1);
               }
             }
           }
@@ -697,7 +688,7 @@ function lineChart(data){
             dayFromBase = filteredData[filteredDP].days_from_baseline
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].self_au === "Yes"){
-                draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+                draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#a65628', 1);
               }
             }
           }
@@ -715,7 +706,7 @@ function lineChart(data){
             dayFromBase = filteredData[filteredDP].days_from_baseline
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].self_du === "Yes"){
-                draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+                draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#f781bf', 1);
               }
             }
           }
@@ -1133,7 +1124,7 @@ let svg3 = d3.select('#vis-svg-3')
     .attr('preserveAspectRatio', 'xMidYMid meet') // this will scale your visualization according to the size of the page.
     .attr('width', '100%') // this is now required by Chrome to ensure the SVG shows up at all
     .style('background-color', '#ccc') // change the background color to white
-    .attr('viewBox', [-30, 600, width*4 + margin.left + margin.right, height + margin.top + margin.bottom].join(' '))
+    .attr('viewBox', [-60, 550, width*4 + margin.left + margin.right + 30, height + margin.top + margin.bottom].join(' '))
 
     //declare chart group
     var chartGroup = svg3
@@ -1201,25 +1192,55 @@ let svg3 = d3.select('#vis-svg-3')
     .attr("class", "main-grid")
     .call(xgridlines);
 
+
+  // add axis labels
+  var svgXLab = d3.select("#vis-svg-3");
+
+  var xLab = svgXLab.append("g")
+    .attr("transform", function(d, i) {
+        return "translate(0,0)";
+    });
+
+  xLab.append("text")
+  .attr("x", 450)
+  .attr("y", 65)
+  .attr("stroke", "#000000")
+  .text("Days from Start");
+
+  var svgYLab = d3.select("#vis-svg-3");
+
+  var yLab = svgYLab.append("g")
+    .attr("transform", function(d, i) {
+        return "translate(0,0) rotate(-90)";
+    });
+
+  yLab.append("text")
+  .attr("x", -300)
+  .attr("y", 10)
+  .attr("stroke", "#000000")
+//  .attr("transform", "rotate(90)")
+  .text("Participant Number");
+
   // declare object with values for legend
   var ordinal = d3.scaleOrdinal()
-    .domain(["Vaginal sex", "Condom used", "Forced sex", "Dating violence", "Partner alcohol use", "Partner drug use", "Self alcohol use", "Self drug use", " "])
-    .range(["#f4f1f0", "#000000", "#69a3b2", "#40e0d0", "#ffc0cb", "#a633ff", "#ff338d", "#33ff8c", "#9495e2"]);
+    .domain(["Vaginal Sex", "Condom Used", "Forced Sex", "Dating Violence", "Partner Alcohol Use", "Partner Drug Use", "Self Alcohol Use", "Self Drug Use"])
+    .range(["#e41a1c", "#377eb8", "#e6e600", "#984ea3", "#ff7f00", "#4daf4a", "#a65628", "#f781bf"]);
   // declare legend svg
   var svgLeg = d3.select("#vis-svg-3");
 
   // draw legend
   svgLeg.append("g")
-    .style("font", "3px arial")
+    .style("font", "10px arial")
     .attr("class", "legendOrdinal")
-    .attr("transform", "translate(10, 5)");
+    .attr("transform", "translate(10, 10)");
 
   // make legend object
   var legendOrdinal = d3.legendColor()
-    .shape("path", d3.symbol().type(d3.symbolCircle).size(2)())
-    .shapePadding(1)
-    .labelOffset(2)
-    .labelAlign("start")
+    .shape("path", d3.symbol().type(d3.symbolCircle).size(30)())
+    .shapePadding(85)
+    .labelOffset(6)
+    .labelAlign("middle")
+    .orient("horizontal")
     .title("Legend:")
     .scale(ordinal);
 
@@ -1238,25 +1259,25 @@ let svg3 = d3.select('#vis-svg-3')
       if (dayFromBase < 460) {
         //placeAllShapes(pid, dayFromBase, objectNum)
         if (totalData[i].condom_used === "Yes"){
-          var tri = draw(d3.symbolTriangle, dayFromBase, pidToOrderedNum,'#69a3b2', 1);
+          var tri = draw(d3.symbolTriangle, dayFromBase, pidToOrderedNum,'#377eb8', 1);
         }
         if (totalData[i].dating_violence === "Yes"){
-          var tri = draw(d3.symbolCircle, dayFromBase, pidToOrderedNum,'#ffc0cb', 1);
+          var tri = draw(d3.symbolCircle, dayFromBase, pidToOrderedNum,'#984ea3', 1);
         }
         if (totalData[i].forced_sex === "Yes"){
-          var tri = draw(d3.symbolCross, dayFromBase, pidToOrderedNum,'#40e0d0', 1);
+          var tri = draw(d3.symbolCross, dayFromBase, pidToOrderedNum,'#e6e600', 1);
         }
         if (totalData[i].partner_au === "Yes"){
-          var tri = draw(d3.symbolDiamond, dayFromBase, pidToOrderedNum,'#a633ff', 1);
+          var tri = draw(d3.symbolDiamond, dayFromBase, pidToOrderedNum,'#ff7f00', 1);
         }
         if (totalData[i].partner_du === "Yes"){
-          var tri = draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#ff338d', 1);
+          var tri = draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#4daf4a', 1);
         }
         if (totalData[i].self_au === "Yes"){
-          var tri = draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#33ff8c', 1);
+          var tri = draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#a65628', 1);
         }
         if (totalData[i].self_du === "Yes"){
-          var tri = draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#9495e2', 1);
+          var tri = draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#f781bf', 1);
         }
         if (totalData[i].va_sex === "Yes"){
           var s = svg3.append("rect")
@@ -1296,6 +1317,7 @@ let svg3 = d3.select('#vis-svg-3')
       .attr("y",function(d){
          return yScale3(yPos - (yScaleVal/2));})
       .attr("x",function(d){
-         return xScale3(xPos - (xScaleVal/2));});
+         return xScale3(xPos - (xScaleVal/2));})
+      .attr('fill', "#e41a1c");
     }
 }

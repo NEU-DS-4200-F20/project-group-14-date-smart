@@ -7,7 +7,7 @@
 
   <!-- Title -->
   <title>Project Team 14: Date SMART, DS 4200 F20</title>
-  
+
   <!-- CSS Styling -->
   <link rel='stylesheet' href='style.css'>
 
@@ -31,52 +31,58 @@
   <!-- Writeup -->
   <div class='content-column'>
    <h1>Project Team 14: Date SMART, DS4200 F20</h1>
-    
+
     <p><strong>Sophie Bailard</strong>, <strong>Maura Keith</strong>, <strong>Abigail Zahne</strong></p>
-    
+
     <p>Service-Learning Course Project as part of
-	<a href='https://canvas.instructure.com/courses/1781732'>DS 4200 F20: Information Visualization</a>, 
-	taught by <a href='https://cody.khoury.northeastern.edu/'>Prof. Cody Dunne</a>, 
-	<a href='https://visualization.khoury.northeastern.edu/'>Data Visualization @ Khoury</a>, 
+	<a href='https://canvas.instructure.com/courses/1781732'>DS 4200 F20: Information Visualization</a>,
+	taught by <a href='https://cody.khoury.northeastern.edu/'>Prof. Cody Dunne</a>,
+	<a href='https://visualization.khoury.northeastern.edu/'>Data Visualization @ Khoury</a>,
 	<a href='https://www.khoury.northeastern.edu/'>Northeastern University</a>.</p>
-    
-    
+
+
     <h1>Abstract</h1>
-    
-    <p>This project presents the effectiveness of Date SMART, an intervention that attempts to reduce dating violence, on adolescent girls. 
-      Because adolescent girls are a high-risk demographic for experiencing dating violence, it is important to determine how effective this 
-      skills-based intervention is. We will be analyzing data from Phase II of the study, and comparing and contrasting the patterns between 
-      the two groups of data—girls in the Data SMART intervention and girls in the control groups.
-    
+
+    <p>This project presents the effectiveness of Date SMART, an intervention for adolescent girls that attempts to reduce dating violence.
+      Because adolescent girls are a high-risk demographic for experiencing dating violence, it is important to determine how effective this
+      skills-based intervention is. We will be analyzing data from Phase II of the study, and comparing and contrasting the patterns between
+      the two groups of data: girls in the Date SMART intervention and girls in the control group, who received the standard dating violence education.
+
       <a href='https://github.com/NEU-DS-4200-F20/project-group-14-date-smart'>Link to the repository </a></p>
 
-    
-    <h1>Visualization</h1>
-    
-    <p>Include the interactive visualization as part of this page. Static example follows.</p>
 
-    
+    <h1>Visualization</h1>
+
+    <p>The following two graphs represent the behaviors of the Date SMART and control groups. The first line graph shows timepoint on the x axis and the
+    number of 'yes' responses from participants to a specific behavior, such as condom use, during a given timepoint; all timepoints
+    are roughtly 90 days in length, and timepoint 1 (i.e. days 90-180) is when both interventions occured. Therefore timepoint 0 is days 0-90, 1 is 91-180,
+    2 is 181 through 270, and so forth. The second visualization is a temportal event sequence visualization. The x axis represents the day and the
+    y axis is the participant number. Every time an event occured, such as condom use, a corresponding shape was drawn on the temporal event sequence
+    visualization to represent its occurance; this allows for in-depth examination of specific participants over time. Click on any data points in
+    the first line graph visualization to filter the values shown in the temporal event sequence visualization.</p>
+
+
   </div>
-  
+
   <!-- Visualization goes here -->
   <div class='vis-holder'>
-    
-    <!-- Change viewbox to whatever you want, e.g., '0 0 1000 6000' This determines your aspect ratio and coordinate system -->    
+
+    <!-- Change viewbox to whatever you want, e.g., '0 0 1000 6000' This determines your aspect ratio and coordinate system -->
     <!-- Delete all the sample SVG code below after the viewbox to before the closing tag. Populate this part of the SVG with D3. -->
-    <h2>'Yes' Responses</h2>
+    <h2>Control Group and Date SMART 'Yes' Responses over Time</h2>
     <select id="selectButton"></select>
     <svg id='vis-svg-1'
       preserveAspectRatio='xMidYMid meet' class='vis-svg' viewBox='0 0 1000 1000' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
 
 
-      
-      
+
+
     <!-- Don't delete the closing tag! -->
     </svg>
-    
+
 
     <div class= 'vis-3-holder'>
-    <h2>Temporal Time Sequence of Participants (X) by Days From Start (Y) By Categories[ie dating violence, ect] (shapes)</h2>
+    <h2>Temporal Time Sequence of Participant Behavior by Days from Start</h2>
     <svg id='vis-svg-3'
       preserveAspectRatio='xMidYMid meet' class='vis-svg-2' viewBox='0 0 1000 1000' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
 
@@ -85,14 +91,14 @@
 
   </div>
   </div>
-  
+
   <!-- Further writeup -->
   <div class = 'content-column'>
 
     <h1>Demo Video</h1>
-    
+
     <p>Embed an MP4 demo video using the HTML5 &lt;video&gt; tag. For example, this screen recording Prof. Cody Dunne made of Mike Bostock's flexible transitions in D3 slide:</p>
-    
+
     <video controls width='100%'>
       <source src='http://www.ccs.neu.edu/home/cody/courses/shared/d3-flexible-transitions.mp4' type='video/mp4'>
       <p>Your browser doesn't support HTML5 video. Here is
@@ -100,9 +106,9 @@
     </video>
 
     <h1>Visualization explanation</h1>
-    
+
     <p>Replace with a brief explanation (can be copied from the paper) and linked presentation slides.</p>
-    
+
     <h1>Acknowledgments</h1>
 
     <p>
@@ -120,12 +126,12 @@
       </li>
     </ul>
   </div>
-  
+
   <!-- Scripts at the end avoid need for dealing with async, defer, or onload event handlers -->
-  
+
   <!-- Load the d3.js library (version 6 minified) -->
   <script src='lib/d3.v6.1.1/d3.min.js'></script>
-  
+
   <!-- Load the d3-legeend.js library (minified) -->
   <script src='lib/d3-legend.min.js'></script>
 

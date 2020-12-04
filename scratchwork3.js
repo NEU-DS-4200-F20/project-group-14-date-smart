@@ -210,3 +210,15 @@ svg3.append("g")
 .tickSize(-width, 0, 0)
 .tickFormat("")
 );*/
+
+/*
+// title
+// http://www.d3noob.org/2013/01/adding-title-to-your-d3js-graph.html
+svg.append("text")
+     .attr("x", width - 150)
+     .attr("y", 30 )
+     .attr("text-anchor", "middle")
+     .style("font-size", "10px")
+     .style("text-decoration", "underline")
+     .text("Control Group and Date SMART 'Yes' Responses");
+     */
