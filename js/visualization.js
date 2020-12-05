@@ -1203,7 +1203,7 @@ let svg3 = d3.select('#vis-svg-3')
 
   xLab.append("text")
   .attr("x", 450)
-  .attr("y", 65)
+  .attr("y", 75)
   .attr("stroke", "#000000")
   .text("Days from Start");
 
