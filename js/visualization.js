@@ -757,7 +757,7 @@ function lineChart(data){
     .duration(1000)
     .attr("d", line(VASexControl)
     )
-    .attr('class', 'dataLine');
+    .attr('class', 'dataLineSex');
 
 
     dsLine
@@ -766,7 +766,7 @@ function lineChart(data){
     .duration(1000)
     .attr("d", line(VASDS)
     )
-    .attr('class', 'dataLine');
+    .attr('class', 'dataLineSex');
 
     dotControl
         .data(VASexControl)
@@ -807,7 +807,7 @@ function lineChart(data){
     .transition()
     .duration(1000)
     .attr("d", line(CondomControl)
-    )
+    ).attr('class', 'dataLineCondom');
 
 
 
@@ -816,7 +816,7 @@ function lineChart(data){
     .transition()
     .duration(1000)
     .attr("d", line(CondomDS)
-    )
+    ).attr('class', 'dataLineCondom');
 
     dotControl
         .data(CondomControl)
@@ -853,14 +853,14 @@ function lineChart(data){
     .transition()
     .duration(1000)
     .attr("d", line(FSControl)
-    )
+    ).attr('class', 'dataLineForcedSex');
 
     dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(ForcedSexDS)
-    )
+    ).attr('class', 'dataLineForcedSex');
 
     dotControl
         .data(FSControl)
@@ -898,14 +898,14 @@ function lineChart(data){
     .transition()
     .duration(1000)
     .attr("d", line(SDUControl)
-    )
+    ).attr('class', 'dataLineSDU');
 
     dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(SelfDUDS)
-    )
+    ).attr('class', 'dataLineSDU');
 
     dotControl
         .data(SDUControl)
@@ -944,14 +944,14 @@ function lineChart(data){
     .transition()
     .duration(1000)
     .attr("d", line(SAUControl)
-    )
+    ).attr('class', 'dataLineSAU');
 
     dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(SelfAUDS)
-    )
+    ).attr('class', 'dataLineSAU');
 
     dotControl
         .data(SAUControl)
@@ -988,14 +988,14 @@ function lineChart(data){
     .transition()
     .duration(1000)
     .attr("d", line(PDUControl)
-    )
+    ).attr('class', 'dataLinePDU');
 
     dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(PartnerDUDS)
-    )
+    ).attr('class', 'dataLinePDU');
 
     dotControl
         .data(PDUControl)
@@ -1032,14 +1032,14 @@ function lineChart(data){
     .transition()
     .duration(1000)
     .attr("d", line(PAUControl)
-    )
+    ).attr('class', 'dataLinePAU');
 
     dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(PartnerAUDS)
-    )
+    ).attr('class', 'dataLinePAU');
 
     dotControl
         .data(PAUControl)
@@ -1075,14 +1075,14 @@ function lineChart(data){
     .transition()
     .duration(1000)
     .attr("d", line(DVControl)
-    )
+    ).attr('class', 'dataLineDatingViolence');
 
     dsLine
     .datum(dataFilter)
     .transition()
     .duration(1000)
     .attr("d", line(DVDS)
-    )
+    ).attr('class', 'dataLineDatingViolence');
 
 
     dotControl
@@ -1320,4 +1320,81 @@ let svg3 = d3.select('#vis-svg-3')
          return xScale3(xPos - (xScaleVal/2));})
       .attr('fill', "#e41a1c");
     }
+
+
+       // declare svg (this svg is the legend)
+  let svg_legend = d3.select('#vis-svg-3-legend')
+  .append('svg')
+  .attr('preserveAspectRatio', 'xMidYMid meet') // this will scale your visualization according to the size of the page.
+  .attr('width', '100%') // this is now required by Chrome to ensure the SVG shows up at all
+  .style('background-color', '#ccc') // change the background color to white
+  .attr('viewBox', [50, 20, width + margin.left + margin.right, 500].join(' '))
+
+
+
+ //create the scale for the xAxis
+ var xScaleLegend = d3.scaleBand() // ordinal??
+ .domain([0, 1, 2, 3, 4, 5, 6, 7])
+ .range([0, width]);
+ 
+ //create the scale for the yAxis
+ var yScaleLegend = d3.scaleBand()
+ .domain([1, 2, 3, 4, 5, 6, 7, 8, 9])
+ .range([200, 0]);
+ //.range([(height - margin.bottom - margin.top), 0]);
+
+// declare chart object
+var chartGroup = svg_legend
+  .append('g')
+  .attr("class", "line-and-dots")
+  .attr('transform','translate(' + margin.left +',' + margin.top + ')');
+
+
+// make list of variables
+var variablesList = ['Sex', 'Condom Used', 'Forced Sex', 'Self Drug Use', 'Self Alcohol Use', 'Partner Drug Use', 'Partner Alcohol Use', 'Dating Violence']
+
+function drawNew(shape, x, y, color, size) {
+  var shape = svg_legend.append("path")
+    .attr("class", "point")
+    .attr("d", d3.symbol().type(shape).size(size * 5))
+    .attr("transform", function(d){
+      return "translate(" + (xScaleLegend(x) + 10) + "," + (yScaleLegend(y) + 85) + ")"; })
+    .attr('fill', color);
+  return shape;
+}
+
+var labels = ["Vaginal sex", "Condom used", "Forced sex", "Dating violence", "Partner alcohol use", "Partner drug use", "Self alcohol use", "Self drug use", " "];
+//var colorLabels = ["#000000", "#69a3b2", "#40e0d0", "#ffc0cb", "#a633ff", "#ff338d", "#33ff8c", "#9495e2"];
+var colorLabels = ["#e41a1c", "#377eb8", "#e6e600", "#984ea3", "#ff7f00", "#4daf4a", "#a65628", "#f781bf"]
+var symbolsList = [d3.symbolTriangle, d3.symbolTriangle, d3.symbolCross, d3.symbolCircle, d3.symbolDiamond, d3.symbolSquare, d3.symbolStar, d3.symbolWye]
+
+
+svg_legend.append("text")
+      .attr("transform", function(d){
+        return "translate(" + (xScaleLegend(1) + 5) + "," + (yScaleLegend(variablesList.length +1) + 85) + ")"; })
+      .style("font-size", "12px")
+      .text("Legend");
+
+/*var rect = svg_legend.append("rect")
+      .attr("class", "rectangle").attr("height",function(d){
+        return yScaleLegend(15);})
+      .attr("width", function(d){
+         return xScaleLegend(7.5);})
+      .attr("y",function(d){
+         return yScaleLegend(i+1 - (15/2));})
+      .attr("x",function(d){
+         return xScaleLegend(3 - (7.5/2));});
+      }*/
+var rect = drawRect(s, 3, 2);
+for(var i = 0; i < variablesList.length +1; i++){
+  svg_legend.append("text")
+      .attr("transform", function(d){
+        return "translate(" + (xScaleLegend(1) + 5) + "," + (yScaleLegend(i) + 85) + ")"; })
+      .style("font-size", "10px")
+      .text(labels[i-1]);
+  if(i < variablesList.length){
+    var shape = drawNew(symbolsList[i], 3, i+1, colorLabels[i], 15);
+  }
+  
+}
 }

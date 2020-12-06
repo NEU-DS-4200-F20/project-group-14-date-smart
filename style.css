@@ -114,6 +114,54 @@ line{
   	fill: none;
 }
 
+  .dataLineSex{
+	stroke: #e41a1c;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLineCondom{
+	stroke: #377eb8;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLineForcedSex{
+	stroke: #e6e600;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLineSDU{
+	stroke: #f781bf;
+	stroke-width: 1px;
+	fill: none;
+  } 
+
+  .dataLinePDU{
+	stroke: #4daf4a;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLineSAU{
+	stroke: #a65628;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLinePAU{
+	stroke: #ff7f00;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLineDatingViolence{
+	stroke:#984ea3;
+	stroke-width: 1px;
+	fill: none;
+  }
+
   .dataLine{
 	stroke: #0000BB;
 	stroke-width: 1px;
