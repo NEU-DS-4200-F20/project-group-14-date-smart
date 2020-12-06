@@ -1222,14 +1222,14 @@ let svg3 = d3.select('#vis-svg-3')
   .text("Participant Number");
 
   // declare object with values for legend
-  var ordinal = d3.scaleOrdinal()
+  /*var ordinal = d3.scaleOrdinal()
     .domain(["Vaginal Sex", "Condom Used", "Forced Sex", "Dating Violence", "Partner Alcohol Use", "Partner Drug Use", "Self Alcohol Use", "Self Drug Use"])
     .range(["#e41a1c", "#377eb8", "#e6e600", "#984ea3", "#ff7f00", "#4daf4a", "#a65628", "#f781bf"]);
-  // declare legend svg
-  var svgLeg = d3.select("#vis-svg-3");
+  // declare legend svg*/
+  //var svgLeg = d3.select("#vis-svg-3");
 
   // draw legend
-  svgLeg.append("g")
+  /*svgLeg.append("g")
     .style("font", "10px arial")
     .attr("class", "legendOrdinal")
     .attr("transform", "translate(10, 10)");
@@ -1246,7 +1246,7 @@ let svg3 = d3.select('#vis-svg-3')
 
   // call drawing of legend
   svgLeg.select(".legendOrdinal")
-    .call(legendOrdinal);
+    .call(legendOrdinal);*/
     //This places shapes on the svg according to particular variable categories by participantID (Y)
     // and day from baseline(X).
     for(var i = 0; i < totalData.length; i++){
