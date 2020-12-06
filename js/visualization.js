@@ -260,7 +260,7 @@ function lineChart(data){
 
 
   // make list of variables
-  var variablesList = ['Vaginal Sex', 'Condom Used', 'Forced Sex', 'Self Drug Use', 'Self Alcohol Use', 'Partner Drug Use', 'Partner Alcohol Use', 'Dating Violence']
+  var variablesList = ['Sex', 'Condom Used', 'Forced Sex', 'Self Drug Use', 'Self Alcohol Use', 'Partner Drug Use', 'Partner Alcohol Use', 'Dating Violence']
 
   // add the options to the button
   d3.select("#selectButton")
