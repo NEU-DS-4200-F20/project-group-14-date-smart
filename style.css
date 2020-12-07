@@ -37,16 +37,33 @@ h1, h2, h3 {
 }
 
 .vis-3-holder {
-	height: 800px;
+	height: 1800px;
 	width: 100%;
 	overflow-y:hidden;
 	overflow-x:hidden;
+	margin: 0;
+
 }
+
+#vis-svg-3-legend {
+	display:inline-block;
+}
+
+.vis-svg-2-l {
+	height: 350px;
+	margin-bottom: 100px;
+}
+
 
 #vis-svg-3 {
 	font-weight: lighter;
 	font-size: 10px;
+	position: absolute;
+	right: -1px;
+
 }
+
+
 
 
 

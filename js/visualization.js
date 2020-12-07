@@ -260,7 +260,7 @@ function lineChart(data){
 
 
   // make list of variables
-  var variablesList = ['Vaginal Sex', 'Condom Used', 'Forced Sex', 'Self Drug Use', 'Self Alcohol Use', 'Partner Drug Use', 'Partner Alcohol Use', 'Dating Violence']
+  var variablesList = ['Sex', 'Condom Used', 'Forced Sex', 'Self Drug Use', 'Self Alcohol Use', 'Partner Drug Use', 'Partner Alcohol Use', 'Dating Violence']
 
   // add the options to the button
   d3.select("#selectButton")
@@ -1325,7 +1325,7 @@ let svg3 = d3.select('#vis-svg-3')
        // declare svg (this svg is the legend)
   let svg_legend = d3.select('#vis-svg-3-legend')
   .append('svg')
-  .attr('preserveAspectRatio', 'xMidYMid meet') // this will scale your visualization according to the size of the page.
+  //.attr('preserveAspectRatio', 'xMidYMid meet') // this will scale your visualization according to the size of the page.
   .attr('width', '100%') // this is now required by Chrome to ensure the SVG shows up at all
   .style('background-color', '#ccc') // change the background color to white
   .attr('viewBox', [50, 20, width + margin.left + margin.right, 500].join(' '))
