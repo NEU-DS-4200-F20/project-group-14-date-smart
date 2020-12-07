@@ -421,6 +421,8 @@ function lineChart(data){
                 if (dayFromBase < 460) {
                   if (filteredData[filteredDP].condom_used === "Yes"){
                     draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#377eb8', 1) // change back to one
+                    draw1(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#377eb8', 1) // change back to one
+
                   }
                 }
               }
@@ -441,6 +443,8 @@ function lineChart(data){
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].dating_violence === "Yes"){
                   draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#984ea3', 1)
+                  draw1(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#984ea3', 1)
+
                 } // change back to one
               }
             }
@@ -458,6 +462,8 @@ function lineChart(data){
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].forced_sex === "Yes"){
                   draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#e6e600', 1) // change back to one
+                  draw1(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#984ea3', 1)
+
                 }
               }
             }
@@ -475,6 +481,8 @@ function lineChart(data){
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].partner_au === "Yes"){
                   draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#ff7f00', 1)
+                  draw1(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#ff7f00', 1)
+
                 }// change back to one
               }
             }
@@ -492,6 +500,8 @@ function lineChart(data){
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].partner_du === "Yes"){
                   draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#4daf4a', 1);
+                  draw1(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#ff7f00', 1)
+
                 }
               }
             }
@@ -509,6 +519,8 @@ function lineChart(data){
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].self_au === "Yes"){
                   draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#a65628', 1);
+                  draw1(d3.symbolStar, dayFromBase, pidToOrderedNum,'#a65628', 1);
+
                 }
               }
             }
@@ -526,6 +538,8 @@ function lineChart(data){
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].self_du === "Yes"){
                   draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#f781bf', 1);
+                  draw1(d3.symbolWye, dayFromBase, pidToOrderedNum,'#f781bf', 1);
+
                 }
               }
             }
@@ -546,7 +560,9 @@ function lineChart(data){
               .attr("class", "rectangle");
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].va_sex === "Yes"){
-                  drawRect(s, dayFromBase, pidToOrderedNum)
+                  draw(d3.symbolTriangle, dayFromBase, pidToOrderedNum,'#e41a1c', 1);
+                  draw1(d3.symbolTriangle, dayFromBase, pidToOrderedNum,'#e41a1c', 1);
+
                 }
               }
             }
