@@ -405,6 +405,8 @@ function lineChart(data){
 
         svg3.selectAll(".point").remove();
         svg3.selectAll(".rectangle").remove();
+        svg4.selectAll(".point").remove();
+        svg4.selectAll(".rectangle").remove();
 
         if (variableSelected === "Condom Used"){
             //get the timepoints selected
@@ -580,6 +582,8 @@ function lineChart(data){
 
         svg3.selectAll(".point").remove();
         svg3.selectAll(".rectangle").remove();
+        svg4.selectAll(".point").remove();
+        svg4.selectAll(".rectangle").remove();
 
 
         if (variableSelected === "Condom Used"){
@@ -596,6 +600,8 @@ function lineChart(data){
               if (dayFromBase < 460) {
                 if (filteredData[filteredDP].condom_used === "Yes") {
                   draw(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#377eb8', 1) // change back to one
+                  draw1(d3.symbolTriangle, dayFromBase,  pidToOrderedNum, '#377eb8', 1) // change back to one
+
                 }
               }
             }
@@ -621,6 +627,7 @@ function lineChart(data){
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].dating_violence === "Yes"){
                 draw(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#984ea3', 1) // change back to one
+                draw1(d3.symbolCircle, dayFromBase,  pidToOrderedNum, '#984ea3', 1)
               }
             }
           }
@@ -638,6 +645,7 @@ function lineChart(data){
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].forced_sex === "Yes"){
                 draw(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#e6e600', 1)
+                draw1(d3.symbolCross, dayFromBase,  pidToOrderedNum, '#e6e600', 1)
               } // change back to one
             }
           }
@@ -655,6 +663,7 @@ function lineChart(data){
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].partner_au === "Yes"){
                 draw(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#ff7f00', 1) // change back to one
+                draw1(d3.symbolDiamond, dayFromBase,  pidToOrderedNum, '#ff7f00', 1)
               }
             }
           }
@@ -672,6 +681,7 @@ function lineChart(data){
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].partner_du === "Yes"){
                 draw(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#4daf4a', 1);
+                draw1(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#4daf4a', 1);
               }
             }
           }
@@ -689,6 +699,7 @@ function lineChart(data){
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].self_au === "Yes"){
                 draw(d3.symbolStar, dayFromBase, pidToOrderedNum,'#a65628', 1);
+                draw1(d3.symbolStar, dayFromBase, pidToOrderedNum,'#a65628', 1);
               }
             }
           }
@@ -707,6 +718,7 @@ function lineChart(data){
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].self_du === "Yes"){
                 draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#f781bf', 1);
+                draw1(d3.symbolWye, dayFromBase, pidToOrderedNum,'#f781bf', 1);
               }
             }
           }
@@ -727,7 +739,8 @@ function lineChart(data){
             .attr("class", "rectangle");
             if (dayFromBase < 460) {
               if (filteredData[filteredDP].va_sex === "Yes"){
-                drawRect(s, dayFromBase, pidToOrderedNum)
+                draw(d3.symbolTriangle, dayFromBase, pidToOrderedNum, '#e41a1c', 1);
+                draw1(d3.symbolTriangle, dayFromBase, pidToOrderedNum, '#e41a1c', 1);
               }
             }
           }
@@ -1124,7 +1137,7 @@ let svg3 = d3.select('#vis-svg-3')
     .attr('preserveAspectRatio', 'xMidYMid meet') // this will scale your visualization according to the size of the page.
     .attr('width', '100%') // this is now required by Chrome to ensure the SVG shows up at all
     .style('background-color', '#ccc') // change the background color to white
-    .attr('viewBox', [-60, 550, width*4 + margin.left + margin.right + 30, height + margin.top + margin.bottom].join(' '))
+    .attr('viewBox', [-60, 500, width*4 + margin.left + margin.right + 30, height + margin.top + margin.bottom].join(' '))
 
     //declare chart group
     var chartGroup = svg3
@@ -1203,7 +1216,7 @@ let svg3 = d3.select('#vis-svg-3')
 
   xLab.append("text")
   .attr("x", 450)
-  .attr("y", 75)
+  .attr("y", 100)
   .attr("stroke", "#000000")
   .text("Days from Start");
 
@@ -1221,32 +1234,6 @@ let svg3 = d3.select('#vis-svg-3')
 //  .attr("transform", "rotate(90)")
   .text("Participant Number");
 
-  // declare object with values for legend
-  /*var ordinal = d3.scaleOrdinal()
-    .domain(["Vaginal Sex", "Condom Used", "Forced Sex", "Dating Violence", "Partner Alcohol Use", "Partner Drug Use", "Self Alcohol Use", "Self Drug Use"])
-    .range(["#e41a1c", "#377eb8", "#e6e600", "#984ea3", "#ff7f00", "#4daf4a", "#a65628", "#f781bf"]);
-  // declare legend svg*/
-  //var svgLeg = d3.select("#vis-svg-3");
-
-  // draw legend
-  /*svgLeg.append("g")
-    .style("font", "10px arial")
-    .attr("class", "legendOrdinal")
-    .attr("transform", "translate(10, 10)");
-
-  // make legend object
-  var legendOrdinal = d3.legendColor()
-    .shape("path", d3.symbol().type(d3.symbolCircle).size(30)())
-    .shapePadding(85)
-    .labelOffset(6)
-    .labelAlign("middle")
-    .orient("horizontal")
-    .title("Legend:")
-    .scale(ordinal);
-
-  // call drawing of legend
-  svgLeg.select(".legendOrdinal")
-    .call(legendOrdinal);*/
     //This places shapes on the svg according to particular variable categories by participantID (Y)
     // and day from baseline(X).
     for(var i = 0; i < totalData.length; i++){
@@ -1280,9 +1267,7 @@ let svg3 = d3.select('#vis-svg-3')
           var tri = draw(d3.symbolWye, dayFromBase, pidToOrderedNum,'#f781bf', 1);
         }
         if (totalData[i].va_sex === "Yes"){
-          var s = svg3.append("rect")
-          .attr("class", "rectangle");
-          drawRect(s, dayFromBase, pidToOrderedNum)
+          var tri = draw(d3.symbolTriangle, dayFromBase, pidToOrderedNum,'#e41a1c', 1);
         }
       }
     }
@@ -1336,7 +1321,7 @@ let svg3 = d3.select('#vis-svg-3')
  var xScaleLegend = d3.scaleBand() // ordinal??
  .domain([0, 1, 2, 3, 4, 5, 6, 7])
  .range([0, width]);
- 
+
  //create the scale for the yAxis
  var yScaleLegend = d3.scaleBand()
  .domain([1, 2, 3, 4, 5, 6, 7, 8, 9])
@@ -1364,7 +1349,6 @@ function drawNew(shape, x, y, color, size) {
 }
 
 var labels = ["Vaginal sex", "Condom used", "Forced sex", "Dating violence", "Partner alcohol use", "Partner drug use", "Self alcohol use", "Self drug use", " "];
-//var colorLabels = ["#000000", "#69a3b2", "#40e0d0", "#ffc0cb", "#a633ff", "#ff338d", "#33ff8c", "#9495e2"];
 var colorLabels = ["#e41a1c", "#377eb8", "#e6e600", "#984ea3", "#ff7f00", "#4daf4a", "#a65628", "#f781bf"]
 var symbolsList = [d3.symbolTriangle, d3.symbolTriangle, d3.symbolCross, d3.symbolCircle, d3.symbolDiamond, d3.symbolSquare, d3.symbolStar, d3.symbolWye]
 
@@ -1375,16 +1359,6 @@ svg_legend.append("text")
       .style("font-size", "12px")
       .text("Legend");
 
-/*var rect = svg_legend.append("rect")
-      .attr("class", "rectangle").attr("height",function(d){
-        return yScaleLegend(15);})
-      .attr("width", function(d){
-         return xScaleLegend(7.5);})
-      .attr("y",function(d){
-         return yScaleLegend(i+1 - (15/2));})
-      .attr("x",function(d){
-         return xScaleLegend(3 - (7.5/2));});
-      }*/
 var rect = drawRect(s, 3, 2);
 for(var i = 0; i < variablesList.length +1; i++){
   svg_legend.append("text")
@@ -1395,6 +1369,124 @@ for(var i = 0; i < variablesList.length +1; i++){
   if(i < variablesList.length){
     var shape = drawNew(symbolsList[i], 3, i+1, colorLabels[i], 15);
   }
-  
+
 }
+
+// VISUALIZATION # 3, part 2
+let svg4 = d3.select('#vis-svg-4')
+    .append('svg')
+    .attr('preserveAspectRatio', 'xMidYMid meet') // this will scale your visualization according to the size of the page.
+    .attr('width', '100%') // this is now required by Chrome to ensure the SVG shows up at all
+    .style('background-color', '#ccc') // change the background color to white
+    .attr('viewBox', [-30, 675, width*4 + margin.left + margin.right, height + margin.top + margin.bottom].join(' '))
+
+    var chartGroup = svg4
+    .append('g')
+    .attr('transform','translate(' + margin.left +',' + margin.top + ')');
+
+    var w = width*4.1 + margin.left + margin.right - 100;
+    var h = height*.75 + margin.top + margin.bottom + 300;
+    var legMove = 70;
+    var legMoveH = legMove + h;
+
+  //PREPARE SCALES
+    var xScale4 = d3.scaleLinear()
+    //accepts
+    .domain([0, 460])
+    //outputs
+    .range([0, w]);
+
+    var yScale4 = d3.scaleLinear()
+    //accepts
+    .domain([0, totalParticipants.length])
+    //outputs
+    .range([legMove, h + legMove]);
+
+    //PREPARE AXES
+    var xAxisBottom1 = d3.axisBottom(xScale4).ticks(92);
+    var xAxisTop1 = d3.axisTop(xScale4).ticks(92);
+    var yAxisLeft1 = d3.axisLeft(yScale4).ticks(50);
+    var yAxisRight1 = d3.axisRight(yScale4).ticks(50);
+
+    //DRAW AXES
+    svg4.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(0," + legMoveH + ")")
+    .call(xAxisBottom1);
+
+    svg4.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(0," + legMove + ")")
+    .call(xAxisTop1);
+
+    svg4.append("g")
+    .attr("class", "axis")
+    .call(yAxisLeft1);
+
+    svg4.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(" + w + ",0)")
+    .call(yAxisRight1);
+
+
+    var xgridlines1 = d3.axisLeft()
+                 .tickFormat("")
+                 .tickSize(-w)
+                 .ticks(20)
+                 .scale(yScale4);
+
+    /*svg3.append("g")
+    .attr("class", "main-grid")
+    .call(ygridlines);*/
+
+    svg4.append("g")
+    .attr("class", "main-grid")
+    .call(xgridlines1);
+
+    function draw1(shape, x, y, color, size) {
+      var shape = svg4.append("path")
+        .attr("class", "point")
+        .attr("d", d3.symbol().type(shape).size(size * 5))
+        .attr("transform", function(d){
+          return "translate(" + xScale4(x) + "," + yScale4(y) + ")"; })
+        .attr('fill', color);
+      return shape;
+    }
+
+    //console.log(totalData)
+
+    for(var i = 0; i < totalData.length; i++){
+      //console.log(totalData[i])
+      pid = totalData[i].participant_id
+      pidToOrderedNum = participantIDDict[pid]
+      dayFromBase = totalData[i].days_from_baseline
+      //console.log(dayFromBase)
+      if (dayFromBase < 460) {
+        //placeAllShapes(pid, dayFromBase, objectNum)
+        if (totalData[i].condom_used === "Yes"){
+          var tri = draw1(d3.symbolTriangle, dayFromBase, pidToOrderedNum,'#377eb8', 1);
+        }
+        if (totalData[i].dating_violence === "Yes"){
+          var tri = draw1(d3.symbolCircle, dayFromBase, pidToOrderedNum,'#984ea3', 1);
+        }
+        if (totalData[i].forced_sex === "Yes"){
+          var tri = draw1(d3.symbolCross, dayFromBase, pidToOrderedNum,'#e6e600', 1);
+        }
+        if (totalData[i].partner_au === "Yes"){
+          var tri = draw1(d3.symbolDiamond, dayFromBase, pidToOrderedNum,'#ff7f00', 1);
+        }
+        if (totalData[i].partner_du === "Yes"){
+          var tri = draw1(d3.symbolSquare, dayFromBase, pidToOrderedNum,'#4daf4a', 1);
+        }
+        if (totalData[i].self_au === "Yes"){
+          var tri = draw1(d3.symbolStar, dayFromBase, pidToOrderedNum,'#a65628', 1);
+        }
+        if (totalData[i].self_du === "Yes"){
+          var tri = draw1(d3.symbolWye, dayFromBase, pidToOrderedNum,'#f781bf', 1);
+        }
+        if (totalData[i].va_sex === "Yes"){
+          var tri = draw1(d3.symbolTriangle, dayFromBase, pidToOrderedNum,'#e41a1c', 1);
+        }
+      }
+    }
 }
