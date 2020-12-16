@@ -46,7 +46,10 @@ h1, h2, h3 {
 }
 
 #vis-svg-3-legend {
+	height: 400px;
 	display:inline-block;
+	position: absolute;
+	z-index:1;
 }
 
 .vis-svg-2-l {
@@ -54,11 +57,16 @@ h1, h2, h3 {
 	margin-bottom: 100px;
 }
 
+.legend-div {
+	margin-bottom: 150px;
+}
+
 
 #vis-svg-3 {
+	z-index:-1;
+	display:inline;
 	font-weight: lighter;
 	font-size: 10px;
-	position: absolute;
 	right: -1px;
 
 }

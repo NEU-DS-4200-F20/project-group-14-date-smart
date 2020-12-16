@@ -52,6 +52,7 @@ Here is an overview of the files and folders we provide for you in your repo.
 
 * `LICENCE` is the source code license for the template. You can add your name or leave it as is.
 
+
 ### Folders
 
 Each folder has an explanatory `README.md` file.
