@@ -2,7 +2,7 @@
 
 This repository is your starting point for your project. Please look through all these materials so you know how to organize your project.
 
-Link to your GitHub pages website: `[insert your *clickable* hyperlink here]`
+Link to your GitHub pages website: https://neu-ds-4200-f20.github.io/project-group-14-date-smart/
 
 # Aim of the assignment
 
@@ -51,6 +51,7 @@ Here is an overview of the files and folders we provide for you in your repo.
 * `style.css` contains the CSS.
 
 * `LICENCE` is the source code license for the template. You can add your name or leave it as is.
+
 
 ### Folders
 

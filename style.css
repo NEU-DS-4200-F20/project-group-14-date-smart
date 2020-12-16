@@ -22,10 +22,72 @@ h1, h2, h3 {
 }
 
 .vis-svg {
-  background-color: #f4f1f0;
+  background-color: #ffffff;
 }
 
-/* Fork on GitHub ribbon via https://codepo8.github.io/css-fork-on-github-ribbon/# */  
+#vis-svg-1 {
+	width: 500px;
+	display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.vis-svg-2 {
+	width: 100%;
+}
+
+.vis-3-holder {
+	height: 1100px;
+	width: 100%;
+	overflow-y:hidden;
+	overflow-x:hidden;
+	margin: 0;
+
+}
+
+#vis-svg-3-legend {
+	height: 400px;
+	display:inline-block;
+	position: absolute;
+	z-index:1;
+}
+
+.vis-svg-2-l {
+	height: 350px;
+	margin-bottom: 100px;
+}
+
+.legend-div {
+	margin-bottom: 150px;
+}
+
+
+#vis-svg-3 {
+	z-index:-1;
+	display:inline;
+	font-weight: lighter;
+	font-size: 10px;
+	right: -1px;
+
+}
+
+.vis-4-holder {
+	height: 2600px;
+	width: 100%;
+	overflow-y: hidden;
+	overflow-x: scroll;
+}
+
+#vis-svg-4 {
+	width: 6000px;
+}
+
+
+
+
+
+
+/* Fork on GitHub ribbon via https://codepo8.github.io/css-fork-on-github-ribbon/# */
 #forkongithub a{
 	background:#00F;
 	color:#fff;
@@ -80,4 +142,115 @@ h1, h2, h3 {
 		-o-transform:rotate(45deg);
 		box-shadow:4px 4px 10px rgba(0,0,0,0.8);
 	}
+}
+
+
+line{
+	stroke:black;
+	stroke-width:2px;
+  	fill: none;
+}
+
+  .dataLineSex{
+	stroke: #e41a1c;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLineCondom{
+	stroke: #377eb8;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLineForcedSex{
+	stroke: #e6e600;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLineSDU{
+	stroke: #f781bf;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLinePDU{
+	stroke: #4daf4a;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLineSAU{
+	stroke: #a65628;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLinePAU{
+	stroke: #ff7f00;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLineDatingViolence{
+	stroke:#984ea3;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine{
+	stroke: #0000BB;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine1{
+	stroke: orange;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine2{
+	stroke: red;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine3{
+	stroke: green;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine4{
+	stroke: palevioletred;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine5{
+	stroke: purple;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine6{
+	stroke: black;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .dataLine7{
+	stroke: lightseagreen;
+	stroke-width: 1px;
+	fill: none;
+  }
+
+  .xlabel, .ylabel {
+	font: 8px sans-serif;
+  }
+
+  .data-circle {
+	fill: #3C92BA;
 }
